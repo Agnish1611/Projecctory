@@ -1,19 +1,13 @@
-import Todo from "../models/todo-model.js";
+import TodoRepo from "../repositories/todo-repo.js";
 
-class TodoRepo {
-    async create(data) {
-        try {
-            const todo = await Todo.create(data);
-            return todo;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
+class TodoService {
+    constructor() {
+        this.todoRepo = new TodoRepo();
     }
 
-    async update(id, data) {
+    async create(data) {
         try {
-            const todo = await Todo.findByIdAndUpdate(id, data);
+            const todo = await this.todoRepo.create(data);
             return todo;
         } catch (error) {
             console.log(error);
@@ -23,8 +17,18 @@ class TodoRepo {
 
     async getAll() {
         try {
-            const todos = await Todo.find({});
+            const todos = await this.todoRepo.getAll();
             return todos;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
+    async update(id, data) {
+        try {
+            const todo = await this.todoRepo.update(id, data);
+            return todo;
         } catch (error) {
             console.log(error);
             throw error;
@@ -33,7 +37,7 @@ class TodoRepo {
 
     async delete(id) {
         try {
-            const todo = await Todo.findByIdAndDelete(id);
+            const todo = await this.todoRepo.delete(id);
             return todo;
         } catch (error) {
             console.log(error);
@@ -42,4 +46,4 @@ class TodoRepo {
     }
 }
 
-export default TodoRepo;
+export default TodoService;
