@@ -15,9 +15,9 @@ class TaskService {
         }
     }
 
-    async getAll() {
+    async getAllByUser(id) {
         try {
-            const tasks = await this.taskRepo.getAll();
+            const tasks = await this.taskRepo.getAllByUser(id);
             return tasks;
         } catch (error) {
             console.log(error);

@@ -21,9 +21,9 @@ class TaskRepo {
         }
     }
 
-    async getAll() {
+    async getAllByUser(id) {
         try {
-            const tasks = await Task.find({});
+            const tasks = await Task.find({user: id});
             return tasks;
         } catch (error) {
             console.log(error);

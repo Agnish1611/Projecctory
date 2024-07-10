@@ -4,7 +4,8 @@ import { JWT_SECRET_KEY } from "../config/env-config.js";
 const authenticate = async (req, res, next) => {
     try {
         const token = req.headers.authorization.split(' ')[1];
-        const decode = jwt.verify(token, JWT_SECRET_KEY);
+        const decodedData = jwt.verify(token, JWT_SECRET_KEY);
+        req.body.user = decodedData.id;
         next();
     } catch (error) {
         console.log(error);

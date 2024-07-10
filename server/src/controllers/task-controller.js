@@ -4,10 +4,8 @@ const taskService = new TaskService();
 
 const createTask = async (req, res) => {
     try {
-        const data = {
-            title: req.body.title,
-            description: req.body.description
-        };
+        const data = parseUserData(req);
+
         const task = await taskService.create(data);
         return res.status(201).json({
             data: task,
@@ -28,7 +26,7 @@ const createTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
     try {
-        const tasks = await taskService.getAll();
+        const tasks = await taskService.getAllByUser(req.body.user);
         return res.status(200).json({
             data: tasks,
             success: true,
@@ -48,11 +46,8 @@ const getAllTasks = async (req, res) => {
 
 const updateTask = async (req, res) => {
     try {
+        const data = parseUserData(req);
         const id = req.params.id;
-        const data = {
-            title: req.body.title,
-            description: req.body.description
-        };
         const task = await taskService.update(id, data);
         return res.status(200).json({
             data: task,
@@ -90,6 +85,31 @@ const deleteTask = async (req, res) => {
             error: error
         });
     }
+}
+
+function parseUserData(req) {
+    let data = {
+        user: req.body.user,
+        title: req.body.title,
+        description: req.body.description,
+    };
+
+    if (req.body.priority) data = { ...data, priority: req.body.priority};
+    if (req.body.labels) data = { ...data, labels: req.body.labels};
+    if (req.body.date) data = { ...data, date: req.body.date};
+
+    if (req.body.recurring) {
+        let recurringData = { 
+            isReurring: true, 
+            recurringType: req.body.recurring,
+            startDate: req.body.recurringStartDate,
+            endDate: req.body.recurringendDate
+        };
+
+        data = { ...data, recurring: recurringData}
+    }
+
+    return data;
 }
 
 export {

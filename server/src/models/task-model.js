@@ -5,15 +5,12 @@ const recurringSchema = new mongoose.Schema({
         type: Boolean,
         default: false
     },
-    isDaily: {
-        type: Boolean,
-        default: false
-    },
-    isWeekly: {
-        type: Number,
-        default: 0,
-        min: [0, 'invalid recurring weekly value'],
-        max: [7, 'invalid recurring weekly value']
+    recurringType: {
+        type: String,
+        enum: { 
+            values: ['Daily', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], 
+            message: '{VALUE} is not supported' 
+        }
     },
     startDate: {
         type: Date
