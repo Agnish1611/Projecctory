@@ -1,14 +1,14 @@
-import TodoRepo from "../repositories/todo-repo.js";
+import TaskRepo from "../repositories/task-repo.js";
 
-class TodoService {
+class TaskService {
     constructor() {
-        this.todoRepo = new TodoRepo();
+        this.taskRepo = new TaskRepo();
     }
 
     async create(data) {
         try {
-            const todo = await this.todoRepo.create(data);
-            return todo;
+            const task = await this.taskRepo.create(data);
+            return task;
         } catch (error) {
             console.log(error);
             throw error;
@@ -17,8 +17,8 @@ class TodoService {
 
     async getAll() {
         try {
-            const todos = await this.todoRepo.getAll();
-            return todos;
+            const tasks = await this.taskRepo.getAll();
+            return tasks;
         } catch (error) {
             console.log(error);
             throw error;
@@ -27,8 +27,8 @@ class TodoService {
 
     async update(id, data) {
         try {
-            const todo = await this.todoRepo.update(id, data);
-            return todo;
+            const task = await this.taskRepo.update(id, data);
+            return task;
         } catch (error) {
             console.log(error);
             throw error;
@@ -37,8 +37,8 @@ class TodoService {
 
     async delete(id) {
         try {
-            const todo = await this.todoRepo.delete(id);
-            return todo;
+            const task = await this.taskRepo.delete(id);
+            return task;
         } catch (error) {
             console.log(error);
             throw error;
@@ -46,4 +46,4 @@ class TodoService {
     }
 }
 
-export default TodoService;
+export default TaskService;

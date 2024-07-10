@@ -1,18 +1,18 @@
-import TodoService from "../services/todo-service.js";
+import TaskService from "../services/task-service.js";
 
-const todoService = new TodoService();
+const taskService = new TaskService();
 
-const createTodo = async (req, res) => {
+const createTask = async (req, res) => {
     try {
         const data = {
             title: req.body.title,
             description: req.body.description
         };
-        const todo = await todoService.create(data);
+        const task = await taskService.create(data);
         return res.status(201).json({
-            data: todo,
+            data: task,
             success: true,
-            message: 'Successfully created a todo',
+            message: 'Successfully created a task',
             error: {}
         });
     } catch (error) {
@@ -20,19 +20,19 @@ const createTodo = async (req, res) => {
         return res.status(500).json({
             data: {},
             success: false,
-            message: 'Failed to create the todo',
+            message: 'Failed to create the task',
             error: error
         });
     }
 }
 
-const getAllTodos = async (req, res) => {
+const getAllTasks = async (req, res) => {
     try {
-        const todos = await todoService.getAll();
+        const tasks = await taskService.getAll();
         return res.status(200).json({
-            data: todos,
+            data: tasks,
             success: true,
-            message: 'Successfully fetched all todos',
+            message: 'Successfully fetched all tasks',
             error: {}
         });
     } catch (error) {
@@ -40,24 +40,24 @@ const getAllTodos = async (req, res) => {
         return res.status(500).json({
             data: {},
             success: false,
-            message: 'Failed to fetch the todos',
+            message: 'Failed to fetch the tasks',
             error: error
         });
     }
 }
 
-const updateTodo = async (req, res) => {
+const updateTask = async (req, res) => {
     try {
         const id = req.params.id;
         const data = {
             title: req.body.title,
             description: req.body.description
         };
-        const todo = await todoService.update(id, data);
+        const task = await taskService.update(id, data);
         return res.status(200).json({
-            data: todo,
+            data: task,
             success: true,
-            message: 'Successfully updated the todo',
+            message: 'Successfully updated the task',
             error: {}
         });
     } catch (error) {
@@ -65,20 +65,20 @@ const updateTodo = async (req, res) => {
         return res.status(500).json({
             data: {},
             success: false,
-            message: 'Failed to update the todo',
+            message: 'Failed to update the task',
             error: error
         });
     }
 }
 
-const deleteTodo = async (req, res) => {
+const deleteTask = async (req, res) => {
     try {
         const id = req.params.id;
-        const todo = await todoService.delete(id);
+        const task = await taskService.delete(id);
         return res.status(200).json({
-            data: todo,
+            data: task,
             success: true,
-            message: 'Successfully deleted the todo',
+            message: 'Successfully deleted the task',
             error: {}
         });
     } catch (error) {
@@ -86,15 +86,15 @@ const deleteTodo = async (req, res) => {
         return res.status(500).json({
             data: {},
             success: false,
-            message: 'Failed to delete the todo',
+            message: 'Failed to delete the task',
             error: error
         });
     }
 }
 
 export {
-    createTodo,
-    getAllTodos,
-    updateTodo,
-    deleteTodo
+    createTask,
+    getAllTasks,
+    updateTask,
+    deleteTask
 }

@@ -1,10 +1,10 @@
-import Todo from "../models/todo-model.js";
+import Task from "../models/task-model.js";
 
-class TodoRepo {
+class TaskRepo {
     async create(data) {
         try {
-            const todo = await Todo.create(data);
-            return todo;
+            const task = await Task.create(data);
+            return task;
         } catch (error) {
             console.log(error);
             throw error;
@@ -13,8 +13,8 @@ class TodoRepo {
 
     async update(id, data) {
         try {
-            const todo = await Todo.findByIdAndUpdate(id, data);
-            return todo;
+            const task = await Task.findByIdAndUpdate(id, data);
+            return task;
         } catch (error) {
             console.log(error);
             throw error;
@@ -23,8 +23,8 @@ class TodoRepo {
 
     async getAll() {
         try {
-            const todos = await Todo.find({});
-            return todos;
+            const tasks = await Task.find({});
+            return tasks;
         } catch (error) {
             console.log(error);
             throw error;
@@ -33,8 +33,8 @@ class TodoRepo {
 
     async delete(id) {
         try {
-            const todo = await Todo.findByIdAndDelete(id);
-            return todo;
+            const task = await Task.findByIdAndDelete(id);
+            return task;
         } catch (error) {
             console.log(error);
             throw error;
@@ -42,4 +42,4 @@ class TodoRepo {
     }
 }
 
-export default TodoRepo;
+export default TaskRepo;
