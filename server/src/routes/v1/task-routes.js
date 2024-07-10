@@ -1,18 +1,15 @@
 import express from 'express';
 
 import { createTask, updateTask, getAllTasks, deleteTask } from '../../controllers/task-controller.js';
-import { authenticate } from '../../middlewares/auth-middleware.js';
 
 const router = express.Router();
 
-// /api/v1/task POST
-router.post('/',
-    authenticate,
+// /api/v1/task/:id POST
+router.post('/:id',
     createTask);
 
 // /api/v1/task GET
-router.get('/',
-    authenticate,
+router.get('/:id',
     getAllTasks);
 
 // /api/v1/task/:id PATCH

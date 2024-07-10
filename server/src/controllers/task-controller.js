@@ -26,7 +26,8 @@ const createTask = async (req, res) => {
 
 const getAllTasks = async (req, res) => {
     try {
-        const tasks = await taskService.getAllByUser(req.body.user);
+        const id = req.params.id;
+        const tasks = await taskService.getAllByUser(id);
         return res.status(200).json({
             data: tasks,
             success: true,
@@ -89,7 +90,7 @@ const deleteTask = async (req, res) => {
 
 function parseUserData(req) {
     let data = {
-        user: req.body.user,
+        user: req.params.id,
         title: req.body.title,
         description: req.body.description,
     };

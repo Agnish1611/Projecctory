@@ -60,6 +60,16 @@ class UserService {
         }
     }
 
+    async authenticate(token) {
+        try {
+            const decodedData = jwt.verify(token, JWT_SECRET_KEY);
+            return decodedData;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     #createToken(user) {
         try {
             const token = jwt.sign({

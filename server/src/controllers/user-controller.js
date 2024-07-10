@@ -51,7 +51,29 @@ const login = async (req, res) => {
     }
 }
 
+const authenticate = async (req, res) => {
+    try {
+        const token = req.headers.authorization.split(' ')[1];
+        const data = await userService.authenticate(token);
+        return res.status(200).json({
+            data: data,
+            success: true,
+            message: 'Authenticated successfully',
+            error: {}
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            data: {},
+            success: false,
+            message: 'Unauthorized',
+            error: error
+        });
+    }
+}
+
 export {
     signup,
-    login
+    login,
+    authenticate
 }
