@@ -1,6 +1,7 @@
 import express from 'express';
 
 import { createTodo, updateTodo, getAllTodos, deleteTodo } from '../../controllers/todo-controller.js';
+import { authenticate } from '../../middlewares/auth-middleware.js';
 
 const router = express.Router();
 
