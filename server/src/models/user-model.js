@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
-import bcrypt from 'bcrypt';
-import { SALT } from '../config/env-config';
+import bcrypt from 'bcryptjs';
+import { SALT } from '../config/env-config.js';
 
 const userSchema = new mongoose.Schema({
     username: {
@@ -15,7 +15,8 @@ const userSchema = new mongoose.Schema({
     },
     email: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     friends: [
         {
@@ -33,4 +34,4 @@ userSchema.pre('save', function (next) {
 });
 
 const User = mongoose.model('User', userSchema);
-module.exports = User;
+export default User;
