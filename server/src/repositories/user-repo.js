@@ -10,6 +10,16 @@ class UserRepo {
             throw error;
         }
     }
+
+    async findByEmail(email) {
+        try {
+            const user = await User.findOne({email: email});
+            return user;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 }
 
 export default UserRepo;
