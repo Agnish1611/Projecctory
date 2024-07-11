@@ -1,19 +1,20 @@
 import express from 'express';
 
-import { signup, login, authenticate } from '../../controllers/user-controller.js';
+import UserController from '../../controllers/user-controller.js';
+const userController = new UserController();
 
 const router = express.Router();
 
 // /api/v1/user/signup POST
 router.post('/signup',
-    signup);
+    userController.signup);
 
 // /api/v1/user/login POST
 router.post('/login',
-    login);
+    userController.login);
 
 // /api/v1/user/authenticate POST
 router.post('/authenticate',
-    authenticate);
+    userController.authenticate);
 
 export default router;
