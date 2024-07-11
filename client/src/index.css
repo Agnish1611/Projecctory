@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#navlink:hover {
+    transition: background-color 0.2s ease-in;
+}
