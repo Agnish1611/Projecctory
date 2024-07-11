@@ -49,8 +49,7 @@ const taskSchema = new mongoose.Schema({
         }
     ],
     date: {
-        type: Date,
-        required: true
+        type: Date
     },
     recurring: recurringSchema,
     assignee: {
