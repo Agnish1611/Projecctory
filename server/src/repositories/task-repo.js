@@ -21,6 +21,16 @@ class TaskRepo {
         }
     }
 
+    async getById(id) {
+        try {
+            const task = await Task.findById(id);
+            return task;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     async delete(id) {
         try {
             const task = await Task.findByIdAndDelete(id);

@@ -11,7 +11,7 @@ class LabelRepo {
         }
     }
 
-    async findTags(filter){
+    async findLabels(filter){
         try {
             const labels = await Label.find(filter);
             return labels;
@@ -33,26 +33,6 @@ class LabelRepo {
     async findByName(data) {
         try {
             const labels = await Label.find({title: data});
-            return labels;
-        } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    }
-
-    async findByTaskId(id) {
-        try {
-            let labels = await Label.find();
-            labels = labels.filter((label) => {
-                let flag=0;
-                for (let i=0; i<label.tasks.length; i++){
-                    if (label.tasks[i] == id) {
-                        flag=1;
-                        break;
-                    }
-                }
-                return flag;
-            });
             return labels;
         } catch (error) {
             console.log(error);

@@ -24,15 +24,17 @@ class TaskService {
             newLabels = newLabels.map((label) => {
                 return {
                     title: label,
-                    tasks: [task._id]
+                    tasks: [task._id],
+                    users: [task.user]
                 }
             });
 
             await this.labelRepo.bulkCreate(newLabels);
 
-            presentLabels.forEach((label) => {
+            presentLabels.forEach(async (label) => {
                 label.tasks.push(task._id);
-                label.save();
+                label.users.push(task.user);
+                await label.save();
             });
 
             return task;
@@ -54,7 +56,19 @@ class TaskService {
 
     async delete(id) {
         try {
-            const response = await this.taskRepo.destroy(id);
+            const task = await this.taskRepo.getById(id);
+            const labels = await this.labelRepo.findByName(task.labels);
+
+            labels.forEach(async (label) => {
+                label.users.pull(task.user);
+                label.tasks.pull(task._id);
+                await label.save();
+                if (label.tasks.length == 0) {
+                    await this.labelRepo.destroy(label._id);
+                }
+            });
+
+            const response = await this.taskRepo.delete(id);
             return response;
         } catch (error) {
             console.log(error);
