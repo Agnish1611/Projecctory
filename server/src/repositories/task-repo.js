@@ -6,17 +6,7 @@ class TaskRepo {
             const task = await Task.create(data);
             return task;
         } catch (error) {
-            console.log(error);
-            throw error;
-        }
-    }
-
-    async update(id, data) {
-        try {
-            const task = await Task.findByIdAndUpdate(id, data);
-            return task;
-        } catch (error) {
-            console.log(error);
+            console.log('error at repo',error);
             throw error;
         }
     }

@@ -1,18 +1,15 @@
 import UserService from "../services/user-service.js";
 
-class UserController {
-    constructor() {
-        this.userService = new UserService();
-    }
+const userService = new UserService();
 
-    async signup(req, res) {
+    async function signup(req, res) {
         try {
             const userData = {
                 username: req.body.username,
                 email: req.body.email,
                 password: req.body.password
             };
-            const data = await this.userService.signup(userData);
+            const data = await userService.signup(userData);
             return res.status(201).json({
                 data: data,
                 success: true,
@@ -30,13 +27,13 @@ class UserController {
         }
     }
     
-    async login(req, res) {
+    async function login(req, res) {
         try {
             const loginData = {
                 email: req.body.email,
                 password: req.body.password
             };
-            const data = await this.userService.login(loginData);
+            const data = await userService.login(loginData);
             return res.status(200).json({
                 data: data,
                 success: true,
@@ -54,10 +51,10 @@ class UserController {
         }
     }
     
-    async authenticate(req, res) {
+    async function authenticate(req, res) {
         try {
             const token = req.headers.authorization.split(' ')[1];
-            const data = await this.userService.authenticate(token);
+            const data = await userService.authenticate(token);
             return res.status(200).json({
                 data: data,
                 success: true,
@@ -74,6 +71,10 @@ class UserController {
             });
         }
     }
-}
 
-export default UserController;
+
+export {
+    signup,
+    login,
+    authenticate
+}

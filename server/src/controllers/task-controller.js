@@ -1,15 +1,12 @@
 import TaskService from "../services/task-service.js";
 
-class TaskController {
-    constructor() {
-        this.taskService = new TaskService();
-    }
+const taskService = new TaskService();
 
-    async createTask(req, res) {
+    async function createTask(req, res) {
         try {
-            const data = this.#parseUserData(req);
+            const data = parseUserData(req);
     
-            const task = await this.taskService.create(data);
+            const task = await taskService.create(data);
             return res.status(201).json({
                 data: task,
                 success: true,
@@ -17,7 +14,7 @@ class TaskController {
                 error: {}
             });
         } catch (error) {
-            console.log(error);
+            console.log('controller error',error);
             return res.status(500).json({
                 data: {},
                 success: false,
@@ -27,10 +24,10 @@ class TaskController {
         }
     }
 
-    async getAllTasks(req, res) {
+    async function getAllTasks(req, res) {
         try {
             const id = req.params.id;
-            const tasks = await this.taskService.getAllByUser(id);
+            const tasks = await taskService.getAllByUser(id);
             return res.status(200).json({
                 data: tasks,
                 success: true,
@@ -48,11 +45,11 @@ class TaskController {
         }
     }
     
-    async updateTask(req, res) {
+    async function updateTask(req, res) {
         try {
-            const data = this.#parseUserData(req);
+            const data = parseUserData(req);
             const id = req.params.id;
-            const task = await this.taskService.update(id, data);
+            const task = await taskService.update(id, data);
             return res.status(200).json({
                 data: task,
                 success: true,
@@ -70,10 +67,10 @@ class TaskController {
         }
     }
     
-    async deleteTask(req, res) {
+    async function deleteTask(req, res) {
         try {
             const id = req.params.id;
-            const task = await this.taskService.delete(id);
+            const task = await taskService.delete(id);
             return res.status(200).json({
                 data: task,
                 success: true,
@@ -91,10 +88,9 @@ class TaskController {
         }
     }
     
-    #parseUserData(req) {
+    function parseUserData(req) {
         let data = {
             user: req.params.id,
-            title: req.body.title,
             description: req.body.description,
         };
     
@@ -115,6 +111,11 @@ class TaskController {
     
         return data;
     }
-}
 
-export default TaskController;
+
+export {
+    createTask,
+    getAllTasks,
+    updateTask,
+    deleteTask
+};

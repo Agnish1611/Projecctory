@@ -26,12 +26,10 @@ const taskSchema = new mongoose.Schema({
         ref: 'User',
         required: true
     },
-    title: {
-        type: String,
-        required: true
-    },
     description: {
-        type: String
+        type: String,
+        required: true,
+        maxLength: [280, 'Too many characters']
     },
     completed: {
         type: String,

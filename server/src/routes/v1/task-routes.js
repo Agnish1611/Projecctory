@@ -1,7 +1,6 @@
 import express from 'express';
 
-import TaskController from '../../controllers/task-controller.js';
-const taskController = new TaskController();
+import * as taskController from '../../controllers/task-controller.js';
 
 const router = express.Router();
 
@@ -12,10 +11,6 @@ router.post('/:id',
 // /api/v1/task GET
 router.get('/:id',
     taskController.getAllTasks);
-
-// /api/v1/task/:id PATCH
-router.patch('/:id',
-    taskController.updateTask);
 
 // /api/v1/task/:id DELETE
 router.delete('/:id',
