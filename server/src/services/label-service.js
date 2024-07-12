@@ -7,7 +7,7 @@ class LabelService {
 
     async getLabelsByUser(id) {
         try {
-            const labels = this.labelRepo.findLabels({users: { $in: [id] }});
+            const labels = await this.labelRepo.findLabels({users: { $in: [id] }});
             return labels;
         } catch (error) {
             console.log(error);
@@ -15,7 +15,7 @@ class LabelService {
         }
     }
 
-    
+
 }
 
 export default LabelService;
