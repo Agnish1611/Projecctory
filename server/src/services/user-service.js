@@ -12,6 +12,20 @@ class UserService {
 
     async signup(data) {
         try {
+            const duplicateuser = await this.userRepo.findByUsername(data.username);
+            if (duplicateuser) {
+                throw {
+                    err: 'Username has been taken'
+                }
+            }
+
+            const duplicateemail = await this.userRepo.findByEmail(data.email);
+            if (duplicateemail) {
+                throw {
+                    err: 'Email already in use'
+                }
+            }
+            
             const user = await this.userRepo.create(data);
 
             const token = this.#createToken(user);

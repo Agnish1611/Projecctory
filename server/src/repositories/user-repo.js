@@ -20,6 +20,16 @@ class UserRepo {
             throw error;
         }
     }
+
+    async findByUsername(username) {
+        try {
+            const user = await User.findOne({username: username}).exec();
+            return user;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
 }
 
 export default UserRepo;
