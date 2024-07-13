@@ -2,8 +2,7 @@
 
 import React from 'react';
 
-import { Link } from 'react-router-dom';
-import { useNavigate } from "react-router-dom";
+import { userAtom } from '@/atoms/user-atom';
 
 import axios from '../api/axios-config'
  
@@ -11,8 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { useToast } from "@/components/ui/use-toast";
-import { ToastAction } from '@/components/ui/toast';
+import { useToast } from "@/components/ui/use-toast"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -26,31 +24,19 @@ import {
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
 
-import { useRecoilState, useRecoilStateLoadable } from 'recoil';
-import { userAtom } from '@/atoms/user-atom';
+import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
-const username_regex = /^[A-z][A-z0-9-_]{3,23}$/;
-const password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
-const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
+import { useRecoilStateLoadable } from 'recoil';
 
-const register_url = '/user/signup';
+const login_url = '/user/login';
 
 const formSchema = z.object({
-    username: z
-        .string()
-        .min(4, "Username must be at least 4 characters.")
-        .max(24, "Username can be at most 24 characters.")
-        .regex(username_regex, 'Username must start with an alphabet and only supports alphanumeric characters, underscore and hyphen'),
-    email: z
-        .string()
-        .regex(email_regex, "Not a valid email"),
-    password: z.string()
-        .min(3, "Password must be at least 8 characters.")
-        .max(23, "Password can be at most 24 characters.")
-        .regex(password_regex, 'Password must include lower case & upper case letters, numbers, and any special character(!, @, #, $, %)')
+    email: z.string().email(),
+    password: z.string(),
 });
 
-export default function Register() {
+export default function Login() {
     const [user, setUser] = useRecoilStateLoadable(userAtom);
 
     const navigate = useNavigate();
@@ -65,18 +51,15 @@ export default function Register() {
         return (
             <div className='h-screen w-screen flex flex-col justify-center items-center'>
                 <div className='text-foreground font-semibold text-xl font-sans mb-7'>Register</div>
-                <RegisterForm />
+                <LoginForm />
             </div>
         );
     }
 }
 
-function RegisterForm() {
+function LoginForm() {
     const form = useForm<z.infer<typeof formSchema>>({
-      resolver: zodResolver(formSchema),
-      defaultValues: {
-        username: "",
-      },
+      resolver: zodResolver(formSchema)
     });
 
     const { toast } = useToast();
@@ -85,7 +68,7 @@ function RegisterForm() {
    
     async function onSubmit(values: z.infer<typeof formSchema>) {
         try {
-            const response = await axios.post(register_url,
+            const response = await axios.post(login_url,
                 JSON.stringify(values),
                 {
                     headers: { 'Content-Type': 'application/json' },
@@ -94,7 +77,7 @@ function RegisterForm() {
             );
             toast({
                 variant: 'successful',
-                title: "Successfully registered",
+                title: "Successfully logged in",
                 description: `Welcome to DoItLater, ${response.data.data.username}`,
             });
             localStorage.setItem("SavedToken", 'Bearer ' + response.data.data.access);
@@ -102,18 +85,18 @@ function RegisterForm() {
 
         } catch (error) {
             if (error.response.data.error.err){
-                if (error.response.data.error.err == 'Username has been taken'){
+                if (error.response.data.error.err == 'no user found'){
                     toast({
                         variant: 'destructive',
-                        title: "Username has already been taken",
-                        description: "Try using a different username or login to existing account.",
+                        title: "No user found",
+                        description: "Email doesn't exist. Try another email or register",
                     });
                 }
-                if (error.response.data.error.err == 'Email already in use'){
+                if (error.response.data.error.err == 'wrong password'){
                     toast({
                         variant: 'destructive',
-                        title: "Email is already in use",
-                        description: "Use another email or login to existing account.",
+                        title: "Wrong password",
+                        description: "The password you entered is incorrect",
                     });
                 }
             }
@@ -131,22 +114,6 @@ function RegisterForm() {
     return (
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-[25rem] border p-10 rounded-lg">
-            <FormField
-              control={form.control}
-              name="username"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Username</FormLabel>
-                  <FormControl>
-                    <Input placeholder="user" {...field} autoComplete='off' />
-                  </FormControl>
-                  <FormDescription>
-                    This is your public display name.
-                  </FormDescription>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
             <FormField
               control={form.control}
               name="email"
@@ -175,7 +142,7 @@ function RegisterForm() {
             />
             <div className='flex flex-col items-center'>
                 <Button type="submit">Submit</Button>
-                <div className='text-primary text-sm font-regular mt-5'>Already have an account? <Link to='/login'><span className='font-semibold hover:underline cursor-pointer'>Login</span></Link></div>
+                <div className='text-primary text-sm font-regular mt-5'>Don't have an account? <Link to='/register'><span className='font-semibold hover:underline cursor-pointer'>Register</span></Link></div>
             </div>
           </form>
         </Form>

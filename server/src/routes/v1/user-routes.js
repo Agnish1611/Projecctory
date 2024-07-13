@@ -13,7 +13,7 @@ router.post('/login',
     userController.login);
 
 // /api/v1/user/authenticate POST
-router.post('/authenticate',
+router.get('/authenticate',
     userController.authenticate);
 
 export default router;
