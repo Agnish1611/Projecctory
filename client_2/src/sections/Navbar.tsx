@@ -51,8 +51,8 @@ const userItems = [
 
 function Navbar() {
   return (
-    <section className='bg-primarybg flex max-sm:flex-row max-sm:items-center sm:flex-col h-screen lg:w-[15rem] max-md:w-[10rem] md:w-[10rem] max-sm:h-10 max-sm:w-screen'>
-      <div className='lg:p-5 max-sm:border-0 max-md:border-b md:border-b flex lg:gap-5 items-center max-md:p-3 md:p-3 md:gap-2 max-md:gap-2'>
+    <section className='bg-background sm:border-r flex max-sm:flex-row max-sm:items-center sm:flex-col h-screen lg:w-[15rem] max-md:w-[10rem] md:w-[10rem] max-sm:h-10 max-sm:w-screen'>
+      <div className='lg:p-5 sm:mx-3 sm:mt-5 max-sm:border-0 max-md:border-b md:border-b flex lg:gap-5 items-center max-md:p-3 md:p-3 md:gap-2 max-md:gap-2'>
         <img src={Logo} className='lg:h-7 lg:w-7 max-md:h-5 max-md:w-5 md:w-5, md:h-5' />
         <img src={Logo_name} className='lg:h-7 max-md:h-5 md:h-5 max-sm:hidden' />
       </div>
@@ -67,7 +67,7 @@ function Navbar() {
 function Tasks() {
   return (
       <>
-        <ul className='my-5 border-b pb-6 max-sm:hidden'>
+        <ul className='my-5 border-b mx-3 pb-6 max-sm:hidden'>
           {taskItems.map((navItem, index) => {
             return (
               <Link key={index} to={navItem.link}>
@@ -79,7 +79,7 @@ function Tasks() {
             )
           })}
         </ul>
-        <div className='sm:hidden'>
+        <div className='sm:hidden ml-3'>
           <DropdownMenu>
             <DropdownMenuTrigger><IoMenu className='hover:bg-accent mt-1 h-7 w-7 p-[2px] rounded-[10%]' /></DropdownMenuTrigger>
             <DropdownMenuContent>
@@ -95,7 +95,7 @@ function Tasks() {
 function UserSection() {
   return (
       <>
-        <ul className='my-5 border-b pb-6 max-sm:hidden'>
+        <ul className='my-5 pb-6 mx-3 max-sm:hidden'>
           {userItems.map((navItem, index) => {
             return (
               <Link key={index} to={navItem.link}>
@@ -107,9 +107,9 @@ function UserSection() {
             )
           })}
         </ul>
-        <div className='sm:hidden'>
+        <div className='sm:hidden absolute right-12 top-0'>
           <DropdownMenu>
-            <DropdownMenuTrigger><FaRegUser className='hover:bg-accent m-3 h-5 w-5 absolute right-9 top-0 p-[2px] rounded-[10%]' /></DropdownMenuTrigger>
+            <DropdownMenuTrigger><FaRegUser className='hover:bg-accent m-3 h-5 w-5 p-[2px] rounded-[10%]' /></DropdownMenuTrigger>
             <DropdownMenuContent>
               <DropdownMenuItem className='cursor-pointer'>Profile</DropdownMenuItem>
               <DropdownMenuItem className='cursor-pointer'>Inbox</DropdownMenuItem>
