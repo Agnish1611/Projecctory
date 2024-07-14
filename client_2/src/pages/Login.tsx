@@ -4,7 +4,7 @@ import React from 'react';
 
 import { userAtom } from '@/atoms/user-atom';
 
-import axios from '../api/axios-config'
+import axios from '../api/axios-config';
  
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -23,6 +23,9 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
+
+import Logo from '../assets/icons/logo.png';
+import Logo_name from '../assets/icons/logo_name.png';
 
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -49,10 +52,16 @@ export default function Login() {
             navigate('/home');
         }
         return (
+          <>
+            <div className='absolute flex flex-row top-0 left-0 m-5 gap-5'>
+              <img src={Logo} className='h-10 w-10' />
+              <img src={Logo_name} className='h-10' />
+            </div>
             <div className='h-screen w-screen flex flex-col justify-center items-center'>
-                <div className='text-foreground font-semibold text-xl font-sans mb-7'>Register</div>
+                <div className='text-foreground font-semibold text-xl font-sans mb-7'>Login</div>
                 <LoginForm />
             </div>
+          </>
         );
     }
 }
@@ -78,7 +87,7 @@ function LoginForm() {
             toast({
                 variant: 'successful',
                 title: "Successfully logged in",
-                description: `Welcome to DoItLater, ${response.data.data.username}`,
+                description: `Welcome to Projecctory, ${response.data.data.username}`,
             });
             localStorage.setItem("SavedToken", 'Bearer ' + response.data.data.access);
             navigate('/home');

@@ -29,6 +29,9 @@ import { Input } from "@/components/ui/input";
 import { useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { userAtom } from '@/atoms/user-atom';
 
+import Logo from '../assets/icons/logo.png';
+import Logo_name from '../assets/icons/logo_name.png';
+
 const username_regex = /^[A-z][A-z0-9-_]{3,23}$/;
 const password_regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/;
 const email_regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/;
@@ -63,10 +66,16 @@ export default function Register() {
             navigate('/home');
         }
         return (
+          <>
+            <div className='absolute flex flex-row top-0 left-0 m-5 gap-5'>
+              <img src={Logo} className='h-10 w-10' />
+              <img src={Logo_name} className='h-10' />
+            </div>
             <div className='h-screen w-screen flex flex-col justify-center items-center'>
                 <div className='text-foreground font-semibold text-xl font-sans mb-7'>Register</div>
                 <RegisterForm />
             </div>
+          </>
         );
     }
 }
@@ -95,7 +104,7 @@ function RegisterForm() {
             toast({
                 variant: 'successful',
                 title: "Successfully registered",
-                description: `Welcome to DoItLater, ${response.data.data.username}`,
+                description: `Welcome to Projecctory, ${response.data.data.username}`,
             });
             localStorage.setItem("SavedToken", 'Bearer ' + response.data.data.access);
             navigate('/home');

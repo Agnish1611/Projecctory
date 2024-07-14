@@ -12,5 +12,6 @@
       ]
     }
     // ...
-  }
+  },
+  "include": ["src/**/*", "node_modules/vite/client.d.ts"]
 }

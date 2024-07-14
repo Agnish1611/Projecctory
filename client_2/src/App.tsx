@@ -2,10 +2,10 @@ import React from 'react';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-import { ThemeProvider } from "@/components/theme-provider"
+import { ThemeProvider } from "@/components/theme-provider";
 import { ModeToggle } from './components/mode-toggle';
 
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 
 import Register from './pages/Register';
 import Login from './pages/Login';
@@ -22,6 +22,7 @@ function App() {
       <BrowserRouter>
         <ThemeProvider>
           <Routes>
+            <Route path='/' element={<Register />} />
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
