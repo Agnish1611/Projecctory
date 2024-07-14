@@ -21,6 +21,16 @@ class TaskRepo {
         }
     }
 
+    async update(id, data){
+        try {
+            const response = await Task.findByIdAndUpdate(id, data);
+            return response;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     async getById(id) {
         try {
             const task = await Task.findById(id);

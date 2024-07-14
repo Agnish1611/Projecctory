@@ -1,7 +1,7 @@
 import { atom , selector} from "recoil";
 import axios from "@/api/axios-config";
 
-const auth_url = '/user/authenticate'
+const auth_url = '/user/authenticate';
 
 export const userAtom = atom({
     key: 'userAtom',

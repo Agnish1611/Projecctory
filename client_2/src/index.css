@@ -2,6 +2,10 @@
   @tailwind components;
   @tailwind utilities;
 
+*{
+  overflow-x: hidden;
+}
+
   
 @layer base {
   :root {
@@ -65,3 +69,14 @@
       @apply bg-background text-foreground;
     }
   }
+
+@keyframes pulse {
+  0%,
+  100% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate(-50%, -50%) rotate(0deg) scale(1.6);
+  }
+}
+

@@ -16,4 +16,8 @@ router.get('/:id',
 router.delete('/:id',
     taskController.deleteTask);
 
+// /api/v1/task/:id PATCH
+router.patch('/:id',
+    taskController.updateTask);
+
 export default router;

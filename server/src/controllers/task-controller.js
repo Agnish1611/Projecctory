@@ -4,7 +4,7 @@ const taskService = new TaskService();
 
     async function createTask(req, res) {
         try {
-            const data = parseUserData(req);
+            const data = parseUserData(req, true);
     
             const task = await taskService.create(data);
             return res.status(201).json({
@@ -47,7 +47,7 @@ const taskService = new TaskService();
     
     async function updateTask(req, res) {
         try {
-            const data = parseUserData(req);
+            const data = parseUserData(req, false);
             const id = req.params.id;
             const task = await taskService.update(id, data);
             return res.status(200).json({
@@ -88,11 +88,10 @@ const taskService = new TaskService();
         }
     }
     
-    function parseUserData(req) {
-        let data = {
-            user: req.params.id,
-            description: req.body.description,
-        };
+    function parseUserData(req, hasUser) {
+        let data = {};
+        if (hasUser) data = { ...data, user: req.params.id};
+        if (req.body.description) data = { ...data, description: req.body.description};
     
         if (req.body.priority) data = { ...data, priority: req.body.priority};
         if (req.body.labels) data = { ...data, labels: req.body.labels};

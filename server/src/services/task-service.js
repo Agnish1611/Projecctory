@@ -33,13 +33,23 @@ class TaskService {
 
             presentLabels.forEach(async (label) => {
                 label.tasks.push(task._id);
-                label.users.push(task.user);
+                if (!label.users.includes(task.user)) label.users.push(task.user);
                 await label.save();
             });
 
             return task;
         } catch (error) {
             console.log('error at service',error);
+            throw error;
+        }
+    }
+
+    async update(id, data) {
+        try {
+            const response = await this.taskRepo.update(id, data);
+            return response;
+        } catch (error) {
+            console.log(error);
             throw error;
         }
     }

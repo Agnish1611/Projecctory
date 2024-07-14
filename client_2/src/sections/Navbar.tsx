@@ -51,8 +51,8 @@ const userItems = [
 
 function Navbar() {
   return (
-    <section className='bg-background sm:border-r flex max-sm:flex-row max-sm:items-center sm:flex-col h-screen lg:w-[15rem] max-md:w-[10rem] md:w-[10rem] max-sm:h-10 max-sm:w-screen'>
-      <div className='lg:p-5 sm:mx-3 sm:mt-5 max-sm:border-0 max-md:border-b md:border-b flex lg:gap-5 items-center max-md:p-3 md:p-3 md:gap-2 max-md:gap-2'>
+    <section className='bg-background fixed sm:border-r flex max-sm:flex-row max-sm:items-center sm:flex-col h-screen lg:w-[15rem] max-md:w-[10rem] md:w-[10rem] max-sm:h-10 max-sm:w-screen'>
+      <div className='lg:p-5 lg:pl-3 sm:mx-3 sm:mt-5 max-sm:border-0 max-md:border-b md:border-b flex lg:gap-5 items-center max-md:p-3 md:p-3 md:gap-2 max-md:gap-2'>
         <img src={Logo} className='lg:h-7 lg:w-7 max-md:h-5 max-md:w-5 md:w-5, md:h-5' />
         <img src={Logo_name} className='lg:h-7 max-md:h-5 md:h-5 max-sm:hidden' />
       </div>
