@@ -1,9 +1,13 @@
-import React from 'react'
+import React from 'react';
+
+import Navbar from '@/sections/Navbar';
 
 function Home() {
   return (
-    <div>Home</div>
+    <div className='h-screen w-screen'>
+        <Navbar />
+    </div>
   )
 }
 
-export default Home
+export default Home;
