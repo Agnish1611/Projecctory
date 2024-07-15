@@ -44,6 +44,28 @@ const taskService = new TaskService();
             });
         }
     }
+
+    async function completeTask (req, res) {
+        try {
+            const id = req.params.id;
+            const value = req.query.value;
+            const task = await taskService.update(id, {completed: value});
+            return res.status(200).json({
+                data: task,
+                success: true,
+                message: 'Successfully completed the task',
+                error: {}
+            });
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                data: {},
+                success: false,
+                message: 'Failed to complete the task',
+                error: error
+            });
+        }
+    }
     
     async function updateTask(req, res) {
         try {
@@ -116,5 +138,6 @@ export {
     createTask,
     getAllTasks,
     updateTask,
-    deleteTask
+    deleteTask,
+    completeTask
 };

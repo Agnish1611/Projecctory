@@ -5,7 +5,7 @@ import Today from '../sections/Today';
 
 function Home() {
   return (
-    <div className='h-[200vh] w-screen flex flex-row'>
+    <div className='overflow-hidden'>
         <Navbar />
         <Today />
     </div>

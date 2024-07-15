@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import { userAtom } from '@/atoms/user-atom';
+import { userAtom } from '@/store/user-atom';
 
 import axios from '../api/axios-config';
  

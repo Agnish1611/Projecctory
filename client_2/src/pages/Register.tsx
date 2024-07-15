@@ -26,7 +26,7 @@ import {
 import { Input } from "@/components/ui/input";
 
 import { useRecoilState, useRecoilStateLoadable } from 'recoil';
-import { userAtom } from '@/atoms/user-atom';
+import { userAtom } from '@/store/user-atom';
 
 import Logo from '../assets/icons/logo.png';
 import Logo_name from '../assets/icons/logo_name.png';
