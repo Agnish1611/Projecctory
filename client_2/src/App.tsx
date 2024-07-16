@@ -11,18 +11,19 @@ import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
 
-import { RecoilRoot } from 'recoil';
+import { RecoilRoot, useRecoilValue, useRecoilValueLoadable } from 'recoil';
+import { userAtom } from './store/user-atom';
 
 function App() {
+  const user = useRecoilValueLoadable(userAtom);
 
   return (
     <>
     <main>
-      <RecoilRoot>
       <BrowserRouter>
         <ThemeProvider>
           <Routes>
-            <Route path='/' element={<Register />} />
+            {user.contents.id ? <Route path='/' element={<Home />} /> : <Route path='/' element={<Register />} />}
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
@@ -30,7 +31,6 @@ function App() {
           <ModeToggle />
         </ThemeProvider>
       </BrowserRouter>
-      </RecoilRoot>
     </main>
     <Toaster />
     </>

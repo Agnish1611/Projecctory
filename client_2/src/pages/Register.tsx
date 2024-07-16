@@ -1,6 +1,8 @@
 "use client"
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { InfinitySpin } from 'react-loader-spinner';
 
 import { Link } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
@@ -55,15 +57,9 @@ const formSchema = z.object({
 export default function Register() {
     const [user, setUser] = useRecoilStateLoadable(userAtom);
 
-    const navigate = useNavigate();
-
     if(user.state == 'loading'){
-        return (<div>Loading .....</div>);
+        return (<></>);
     }else{
-        console.log(user.contents);
-        if (user.contents.id) {
-            navigate('/home');
-        }
         return (
           <>
             <div className='absolute flex flex-row top-0 left-0 m-5 gap-5'>

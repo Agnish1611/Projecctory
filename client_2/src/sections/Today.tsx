@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
-
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect, Suspense } from 'react';
 
 import axios from '@/api/axios-config';
+
+import { Skeleton } from "@/components/ui/skeleton";
+import { useToast } from "@/components/ui/use-toast";
 
 import {
   Card,
@@ -13,25 +14,81 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { Badge } from "@/components/ui/badge";
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
-import { useRecoilValue, useRecoilState } from 'recoil';
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { cn } from "@/lib/utils";
+import { format } from "date-fns";
+import { Calendar } from "@/components/ui/calendar"
+
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+
+import { IoAddCircle  } from "react-icons/io5";
+import { CalendarIcon } from "@radix-ui/react-icons";
+
+import { useRecoilValue, useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { userAtom } from '@/store/user-atom';
 import { tasksAtom } from '@/store/tasks-atom';
 import { taskSelector } from '@/store/task-selector';
-import { completedSelector } from '@/store/completed-selector';
+import { Button } from '@/components/ui/button';
 
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+
+const labelsRegex = /^[a-zA-Z ]*$/;
+ 
+const formSchema = z.object({
+  description: z.string().max(300, 'Description can be max 300 characters'),
+  priority: z.string(),
+  labels: z.string().regex(labelsRegex, 'Can contain only alphabets').optional(),
+  date: z.date().optional(),
+  recurring: z.object({
+    type: z.string().optional(),
+    start: z.date().optional(),
+    end: z.date().optional()
+  }).optional(),
+});
 
 const getTaskUrl = '/task/';
-const completeTaskUrl = '/task/complete/'
+const completeTaskUrl = '/task/complete/';
+const createTaskUrl = '/task/';
 const priorityArray = ["ignorant", "normal", "important", "urgent"];
 const colors = ['bg-green-500', 'bg-yellow-500', 'bg-orange-500', 'bg-red-500'];
 
 function SingleTask({taskId}) {
-  const navigate  = useNavigate();
-
   const task = useRecoilValue(taskSelector(taskId));
   console.log(task);
 
@@ -39,16 +96,18 @@ function SingleTask({taskId}) {
 
 
   async function handleCheckbox (url) {
-    console.log('inside');
-    await axios.patch(url+'?value='+!isCompleted);
-      
+    try {
+      await axios.patch(url+'?value='+!isCompleted);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  if (!task._id) return (<div>Loading ....</div>);
+  if (!task._id) return (<SkeletonCard />);
   else {
     return (
             <Card className=' w-[300px] m-10'>
-              <div className="checkbox-wrapper-24 m-3">
+              <div className="checkbox-wrapper-24 m-3 ml-5">
                 <input type="checkbox" id="check-24" name="check" checked={isCompleted} />
                 <label htmlFor="check-24" onClick={() => {
                     setIsCompleted(!isCompleted);
@@ -68,11 +127,6 @@ function SingleTask({taskId}) {
               <CardContent>
                 <p className={isCompleted?'font-semibold text-md text-muted-foreground line-through' : 'font-semibold text-md'}>{task.description}</p>
               </CardContent>
-              <CardFooter>
-                {(task.date)? (
-                  <p className='text-sm text-muted-foreground'><span className='font-semibold'>Due Date:</span> {task.date.split('T')[0]}</p>
-                ) : (<></>)}
-              </CardFooter>
             </Card>
     )
   }
@@ -81,7 +135,6 @@ function SingleTask({taskId}) {
 function Tasks() {
   const user = useRecoilValue(userAtom);
   const [tasksValue, setTasksValue] = useRecoilState(tasksAtom);
-
 
     useEffect(() => {
       axios.get(getTaskUrl+user.id)
@@ -107,18 +160,327 @@ function Tasks() {
   }
 }
 
+function CreateTaskForm() {
+  const user = useRecoilValue(userAtom);
+  const {toast} = useToast();
+  const [tasks, setTasks] = useRecoilState(tasksAtom);
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      date: new Date()
+    }
+  });
+
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    interface objSchema {
+      description: string,
+      labels: string[],
+      date: string,
+      priority: number,
+      recurring?: boolean,
+      recurringType?: string,
+      startDate?: string,
+      endDate?: string
+    }
+    let reqObj: objSchema = {
+      description: values.description,
+      labels: values.labels.trim().split(/\s+/),
+      date: values.date.toISOString(),
+      priority: priorityArray.indexOf(values.priority)
+    }
+    if (values.recurring.type) {
+      reqObj = 
+      {
+        ...reqObj, 
+        recurringType: values.recurring.type,
+        startDate: values.recurring.start.toISOString(),
+        endDate: values.recurring.start.toISOString()
+      };
+    }
+    try {
+      const response = await axios.post(createTaskUrl+user.id, JSON.stringify(reqObj),
+        {
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+      toast({
+        variant: 'successful',
+        title: "Successfully created a task",
+        description: 'You can now close the dialog'
+      });
+      setTasks([...tasks, response.data.data]);
+      console.log(response.data);
+    } catch (error) {
+      toast({
+        variant: 'destructive',
+        title: "Failed to create the task"
+      });
+      console.log(error);
+    }
+  }
+
+  return (<Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-2">
+        <FormField
+          control={form.control}
+          name="description"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Description</FormLabel>
+              <FormControl>
+                <Input placeholder="This is a new task" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="labels"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Labels {'(separete by spaces)'}</FormLabel>
+              <FormControl>
+                <Input placeholder="assignment selfstudy" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <div className='flex items-center justify-between h-[70px]'>
+          <FormField
+            control={form.control}
+            name="date"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Date</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[160px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date < new Date() || date > new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDay())
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="priority"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Priority</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger className='w-[120px]'>
+                      <SelectValue placeholder="ignorant" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    <SelectItem value="ignorant">ignorant</SelectItem>
+                    <SelectItem value="normal">normal</SelectItem>
+                    <SelectItem value="important">important</SelectItem>
+                    <SelectItem value="urgent">urgent</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+        <div className='p-3 border rounded-lg grid grid-cols-2'>
+          <FormField
+            control={form.control}
+            name="recurring.type"
+            render={({ field }) => (
+              <FormItem className='col-span-2 mb-5'>
+                <FormLabel>Recurring type</FormLabel>
+                <Select onValueChange={field.onChange}>
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a recurring type for your task" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <FormDescription>Your task will repeat accoring to the specified type</FormDescription>
+                  <SelectContent>
+                    <SelectItem value="Daily">Everyday</SelectItem>
+                    <SelectItem value="Monday">Every Monday</SelectItem>
+                    <SelectItem value="Tuesday">Every Tuesday</SelectItem>
+                    <SelectItem value="Wednesday">Every Wednesday</SelectItem>
+                    <SelectItem value="Thursday">Every Thursday</SelectItem>
+                    <SelectItem value="Friday">Every Friday</SelectItem>
+                    <SelectItem value="Saturday">Every Saturday</SelectItem>
+                    <SelectItem value="Sunday">Every Sunday</SelectItem>
+                  </SelectContent>
+                </Select>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="recurring.start"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>Start</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[160px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date < new Date() || date > new Date(new Date().getFullYear() + 5, new Date().getMonth(), new Date().getDay())
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="recurring.end"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <FormLabel>End</FormLabel>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-[160px] pl-3 text-left font-normal",
+                          !field.value && "text-muted-foreground"
+                        )}
+                      >
+                        {field.value ? (
+                          format(field.value, "PPP")
+                        ) : (
+                          <span>Pick a date</span>
+                        )}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) =>
+                        date < new Date() || date > new Date(new Date().getFullYear() + 5, new Date().getMonth(), new Date().getDay())
+                      }
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+          <Button type="submit" className='mt-3'>Create task</Button>
+      </form>
+    </Form>)
+}
+
+function CreateDialog() {
+  return (
+    <Dialog>
+              <DialogTrigger asChild>
+                <IoAddCircle className='h-8 w-8 hover:scale-125 transition cursor-pointer' /> 
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>Create a new Task today</DialogTitle>
+                </DialogHeader>
+                <CreateTaskForm />
+              </DialogContent>
+            </Dialog>
+  )
+}
+
 function Today() {
+
+  
+  const [render, setRender] = useState(false);
+
+  useEffect(() =>{
+    setTimeout(() => {
+      setRender(true);
+    }, 1000);
+  }, []);
 
   return (
     <section className='h-min w-[80rem] relative left-[15rem]'>
         <div className='text-primary text-4xl font-semibold mt-10 p-10 pl-20 border-b mx-10'>Today</div>
         <div className='m-10 p-5'>
-          <div className='text-xl font-semibold m-5'>My Tasks</div>
+          <div className='text-xl font-semibold flex m-5 gap-10'>
+            <span>My Tasks</span>
+            <CreateDialog />
+          </div>
           <div className='border rounded-lg flex flex-wrap'>
-            <Tasks />
+            <Suspense fallback={<SkeletonCard />}>
+              {render ? <Tasks /> : <SkeletonCard />}
+            </Suspense>
           </div>
         </div>
     </section>
+  )
+}
+
+export function SkeletonCard() {
+  return (
+    <div className="flex flex-col space-y-3 m-10">
+      <Skeleton className="h-[169px] w-[300px] rounded-xl" />
+    </div>
   )
 }
 
