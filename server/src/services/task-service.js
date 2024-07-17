@@ -54,9 +54,15 @@ class TaskService {
         }
     }
 
-    async getAllByUser(id) {
+    async getTasksByUser(id, data) {
         try {
-            const tasks = await this.taskRepo.getAllByUser(id);
+            let filter = { user: id };
+            if (data.date) filter = { ...filter, date: data.date };
+            if (data.completed == true) filter = { ...filter, completed: true};
+            if (data.completed == false) filter = { ...filter, completed: false};
+            if (data.label) filter = { ...filter, labels: { $in: [data.label] } };
+            if (data.priority) filter = { ...filter, priority: data.priority};
+            const tasks = await this.taskRepo.getTasksByUser(filter);
             return tasks;
         } catch (error) {
             console.log(error);

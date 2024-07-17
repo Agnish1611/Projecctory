@@ -24,10 +24,14 @@ const taskService = new TaskService();
         }
     }
 
-    async function getAllTasks(req, res) {
+    async function getTasks(req, res) {
         try {
             const id = req.params.id;
-            const tasks = await taskService.getAllByUser(id);
+
+            const filter = filterBuilder(req.query);
+
+            const tasks = await taskService.getTasksByUser(id, filter);
+
             return res.status(200).json({
                 data: tasks,
                 success: true,
@@ -133,10 +137,31 @@ const taskService = new TaskService();
         return data;
     }
 
+    function filterBuilder(query) {
+        let filter = {};
+        if (query.date) {
+            filter = { date: query.date };
+        }
+        if (query.completed) {
+            filter = { ...filter, completed: true };
+        }
+        else if (query.not_completed) {
+            filter = { ...filter, completed: false };
+        }
+        if (query.label) {
+            filter = { ...filter, label: query.label };
+        }
+        if (query.priority) {
+            filter = { ...filter, priority: query.priority };
+        }
+
+        return filter;
+    }
+
 
 export {
     createTask,
-    getAllTasks,
+    getTasks,
     updateTask,
     deleteTask,
     completeTask

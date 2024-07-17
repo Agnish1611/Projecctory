@@ -8,9 +8,9 @@ const router = express.Router();
 router.post('/:id',
     taskController.createTask);
 
-// /api/v1/task GET
+// /api/v1/task/:id GET
 router.get('/:id',
-    taskController.getAllTasks);
+    taskController.getTasks);
 
 // /api/v1/task/:id DELETE
 router.delete('/:id',

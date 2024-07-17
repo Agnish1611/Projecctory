@@ -1,10 +1,10 @@
 import { selectorFamily } from "recoil";
-import { tasksAtom } from "./tasks-atom";
+import { tasksTodayAtom } from "./tasksToday-atom";
 
 export const taskSelector = selectorFamily({
     key: 'taskSelector',
     get: (param) => ({get}) => {
-      const tasks = get(tasksAtom);
+      const tasks = get(tasksTodayAtom);
       const task = tasks.find((value) => {
         return (value._id == param);
       });

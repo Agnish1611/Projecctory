@@ -13,10 +13,10 @@ const recurringSchema = new mongoose.Schema({
         }
     },
     startDate: {
-        type: Date
+        type: String
     },
     endDate: {
-        type: Date
+        type: String
     }
 }, {_id: false});
 
@@ -47,7 +47,7 @@ const taskSchema = new mongoose.Schema({
         }
     ],
     date: {
-        type: Date
+        type: String
     },
     recurring: recurringSchema,
     assignee: {

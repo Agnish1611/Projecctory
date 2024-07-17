@@ -48,6 +48,16 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
+
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
 import { Calendar } from "@/components/ui/calendar"
@@ -57,6 +67,7 @@ import { Label } from "@/components/ui/label"
 
 import { IoAddCircle  } from "react-icons/io5";
 import { CalendarIcon } from "@radix-ui/react-icons";
+import { LuSettings2 } from "react-icons/lu";
 
 import { useRecoilValue, useRecoilState, useRecoilStateLoadable } from 'recoil';
 import { userAtom } from '@/store/user-atom';
@@ -67,6 +78,7 @@ import { Button } from '@/components/ui/button';
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { tasksTodayAtom } from '@/store/tasksToday-atom';
 
 const labelsRegex = /^[a-zA-Z ]*$/;
  
@@ -79,7 +91,7 @@ const formSchema = z.object({
     type: z.string().optional(),
     start: z.date().optional(),
     end: z.date().optional()
-  }).optional(),
+  }),
 });
 
 const getTaskUrl = '/task/';
@@ -92,8 +104,11 @@ function SingleTask({taskId}) {
   const task = useRecoilValue(taskSelector(taskId));
   console.log(task);
 
-  const [isCompleted, setIsCompleted] = useState(task.completed == 'true');
+  const [isCompleted, setIsCompleted] = useState(task.completed == "true");
 
+  useEffect(() => {
+    setIsCompleted(task.completed == "true");
+  }, [task]);
 
   async function handleCheckbox (url) {
     try {
@@ -134,18 +149,18 @@ function SingleTask({taskId}) {
 
 function Tasks() {
   const user = useRecoilValue(userAtom);
-  const [tasksValue, setTasksValue] = useRecoilState(tasksAtom);
+  const [tasksValue, setTasksValue] = useRecoilState(tasksTodayAtom);
 
-    useEffect(() => {
-      axios.get(getTaskUrl+user.id)
-        .then((res) => {
-          return setTasksValue(res.data.data)}
-        )
-        .catch((err) => {
-          console.log(err);
-          return [];
-        });
-    },[]);
+    // useEffect(() => {
+    //   axios.get(getTaskUrl+user.id)
+    //     .then((res) => {
+    //       return setTasksValue(res.data.data)}
+    //     )
+    //     .catch((err) => {
+    //       console.log(err);
+    //       return [];
+    //     });
+    // },[]);
 
 
   if (tasksValue.length == 0) { return (<div className='p-5 m-5 text-sm font-semibold text-muted-foreground'>No tasks today</div>)}
@@ -163,14 +178,15 @@ function Tasks() {
 function CreateTaskForm() {
   const user = useRecoilValue(userAtom);
   const {toast} = useToast();
-  const [tasks, setTasks] = useRecoilState(tasksAtom);
+  const [tasks, setTasks] = useRecoilState(tasksTodayAtom);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      date: new Date()
-    }
   });
+
+  function add_days(dt, n) {
+    return new Date(dt.setDate(dt.getDate() + n)); 
+  }
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     interface objSchema {
@@ -186,10 +202,18 @@ function CreateTaskForm() {
     let reqObj: objSchema = {
       description: values.description,
       labels: values.labels.trim().split(/\s+/),
-      date: values.date.toISOString(),
+      date: add_days(values.date, 1).toISOString().split("T")[0],
       priority: priorityArray.indexOf(values.priority)
     }
     if (values.recurring.type) {
+      if (!values.recurring.start || !values.recurring.end) {
+        toast({
+          variant: 'destructive',
+          title: "Failed to create the task",
+          description: 'Both recurring start and end date need to be specified along with type'
+        });
+        return;
+      }
       reqObj = 
       {
         ...reqObj, 
@@ -209,8 +233,8 @@ function CreateTaskForm() {
         title: "Successfully created a task",
         description: 'You can now close the dialog'
       });
-      setTasks([...tasks, response.data.data]);
-      console.log(response.data);
+      if (reqObj.date == new Date(new Date().getTime() + 330*60000).toISOString().split('T')[0]) setTasks([...tasks, response.data.data]);
+      console.log(response.data.data.date);
     } catch (error) {
       toast({
         variant: 'destructive',
@@ -280,7 +304,7 @@ function CreateTaskForm() {
                       selected={field.value}
                       onSelect={field.onChange}
                       disabled={(date) =>
-                        date < new Date() || date > new Date(new Date().getFullYear() + 1, new Date().getMonth(), new Date().getDay())
+                        date < new Date(new Date().setDate(new Date().getDate() - 1)) || date > new Date(new Date().setFullYear(new Date().getFullYear() + 1))
                       }
                       initialFocus
                     />
@@ -447,6 +471,38 @@ function CreateDialog() {
   )
 }
 
+function FilterMenu() {
+  const [completed, setCompleted] = useState("");
+  const user = useRecoilValue(userAtom);
+  const [tasks, setTasks] = useRecoilState(tasksTodayAtom);
+
+  useEffect(() => {
+      if (completed == "true") {
+          axios.get(getTaskUrl+user.id+'?completed=true&date='+new Date(new Date().getTime() + 330*60000).toISOString().split('T')[0])
+            .then((res) => {setTasks(res.data.data)})
+            .catch((err) => {console.log(err)});
+      } else if (completed == "false") {
+        axios.get(getTaskUrl+user.id+'?not_completed=true&date='+new Date(new Date().getTime() + 330*60000).toISOString().split('T')[0])
+        .then((res) => {setTasks(res.data.data)})
+        .catch((err) => {console.log(err)});
+      }
+  }, [completed]);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant='ghost' className='px-3'><LuSettings2 className='h-6 w-6' /></Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuRadioGroup value={completed} onValueChange={setCompleted}>
+          <DropdownMenuRadioItem value="true">Completed</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="false">Not Completed</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  )
+}
+
 function Today() {
 
   
@@ -465,6 +521,9 @@ function Today() {
           <div className='text-xl font-semibold flex m-5 gap-10'>
             <span>My Tasks</span>
             <CreateDialog />
+            <Suspense>
+              <FilterMenu />
+            </Suspense>
           </div>
           <div className='border rounded-lg flex flex-wrap'>
             <Suspense fallback={<SkeletonCard />}>
