@@ -54,6 +54,30 @@ class TaskService {
         }
     }
 
+    async getUpcoming(id) {
+        try {
+            let data = [];
+            let dates = [];
+            for (let i=0; i<7; i++) {
+                let date = new Date(new Date().getTime() + 330*60000);
+                date.setDate(date.getDate() + i);
+                dates[i] = date.toISOString().split('T')[0];
+            }
+            data[0] = await this.taskRepo.getTasksByUser({user: id, date: dates[0]});
+            data[1] = await this.taskRepo.getTasksByUser({user: id, date: dates[1]});
+            data[2] = await this.taskRepo.getTasksByUser({user: id, date: dates[2]});
+            data[3] = await this.taskRepo.getTasksByUser({user: id, date: dates[3]});
+            data[4] = await this.taskRepo.getTasksByUser({user: id, date: dates[4]});
+            data[5] = await this.taskRepo.getTasksByUser({user: id, date: dates[5]});
+            data[6] = await this.taskRepo.getTasksByUser({user: id, date: dates[6]});
+
+            return data;
+        } catch (error) {
+            console.log(error);
+            throw error;
+        }
+    }
+
     async getTasksByUser(id, data) {
         try {
             let filter = { user: id };

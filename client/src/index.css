@@ -3,20 +3,10 @@
   @tailwind utilities;
 
   ::-webkit-scrollbar {
-    width: 10px;
-  }
-   
-  /* Handle */
-  ::-webkit-scrollbar-thumb {
-    background: #383737; 
-    border-radius: 10px;
+    display: none;
   }
   
-  /* Handle on hover */
-  ::-webkit-scrollbar-thumb:hover {
-    background: #6f6f6f; 
-  }
-  
+
 @layer base {
   :root {
     --background: 0 0% 100%;

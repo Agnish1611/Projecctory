@@ -13,6 +13,7 @@ import Home from './pages/Home';
 
 import { RecoilRoot, useRecoilValue, useRecoilValueLoadable } from 'recoil';
 import { userAtom } from './store/user-atom';
+import UpcomingPage from './pages/Upcoming';
 
 function App() {
   const user = useRecoilValueLoadable(userAtom);
@@ -27,6 +28,7 @@ function App() {
             <Route path='/register' element={<Register />} />
             <Route path='/login' element={<Login />} />
             <Route path='/home' element={<Home />} />
+            <Route path='/upcoming' element={<UpcomingPage />} />
           </Routes>
           <ModeToggle />
         </ThemeProvider>

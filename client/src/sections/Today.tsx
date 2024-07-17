@@ -559,7 +559,7 @@ function Today() {
   )
 }
 
-export function SkeletonCard() {
+function SkeletonCard() {
   return (
     <div className="flex flex-col space-y-3 m-10">
       <Skeleton className="h-[169px] w-[300px] rounded-xl" />

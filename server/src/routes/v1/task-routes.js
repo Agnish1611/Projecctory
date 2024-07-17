@@ -12,6 +12,10 @@ router.post('/:id',
 router.get('/:id',
     taskController.getTasks);
 
+// /api/v1/task/upcoming/:id GET
+router.get('/upcoming/:id',
+    taskController.getUpcomingTasks);
+
 // /api/v1/task/:id DELETE
 router.delete('/:id',
     taskController.deleteTask);

@@ -24,6 +24,26 @@ const taskService = new TaskService();
         }
     }
 
+    async function getUpcomingTasks(req, res) {
+        try {    
+            const data = await taskService.getUpcoming(req.params.id);
+            return res.status(201).json({
+                data: data,
+                success: true,
+                message: 'Successfully fetched the upcoming tasks',
+                error: {}
+            });
+        } catch (error) {
+            console.log('controller error',error);
+            return res.status(500).json({
+                data: {},
+                success: false,
+                message: 'Failed to get the upcoming tasks',
+                error: error
+            });
+        }
+    }
+
     async function getTasks(req, res) {
         try {
             const id = req.params.id;
@@ -162,6 +182,7 @@ const taskService = new TaskService();
 export {
     createTask,
     getTasks,
+    getUpcomingTasks,
     updateTask,
     deleteTask,
     completeTask
