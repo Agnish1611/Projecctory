@@ -65,7 +65,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { IoAddCircle  } from "react-icons/io5";
+import { IoAddCircle, IoSearch  } from "react-icons/io5";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { LuSettings2 } from "react-icons/lu";
 
@@ -107,6 +107,7 @@ function SingleTask({taskId}) {
   const [isCompleted, setIsCompleted] = useState(task.completed == "true");
 
   useEffect(() => {
+    console.log('inside');
     setIsCompleted(task.completed == "true");
   }, [task]);
 
@@ -503,6 +504,26 @@ function FilterMenu() {
   )
 }
 
+function SearchLabels() {
+  const [tasks, setTasks] = useRecoilState(tasksTodayAtom);
+  const user = useRecoilValue(userAtom);
+  const [label, setLabel] = useState("");
+
+  async function search() {
+    try {
+      const res = await axios.get(getTaskUrl+user.id+'?label='+label);
+      setTasks(res.data.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  return (<div className='rounded-md flex justify-between items-center'>
+    <input className='border w-44 h-10 bg-background rounded-lg text-sm pl-5 pr-10 py-5 font-regular' placeholder='Search label' value={label} onChange={(e) => {setLabel(e.target.value)}} />
+    <IoSearch className='relative left-[-35px] cursor-pointer' onClick={search} />
+  </div>)
+}
+
 function Today() {
 
   
@@ -523,6 +544,9 @@ function Today() {
             <CreateDialog />
             <Suspense>
               <FilterMenu />
+            </Suspense>
+            <Suspense>
+              <SearchLabels />
             </Suspense>
           </div>
           <div className='border rounded-lg flex flex-wrap'>
