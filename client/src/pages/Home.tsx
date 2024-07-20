@@ -7,8 +7,8 @@ import Upcoming from '@/sections/Upcoming';
 function Home() {
   return (
     <div className='overflow-x-hidden'>
-        <Navbar active="home" />
-        <Today />
+      <Navbar active="home" />
+      <Today />
     </div>
   );
 }
