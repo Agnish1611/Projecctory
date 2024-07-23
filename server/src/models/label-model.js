@@ -6,12 +6,6 @@ const labelSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    users: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ],
     tasks: [
         {
             type: mongoose.Schema.Types.ObjectId,

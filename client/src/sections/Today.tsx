@@ -56,7 +56,14 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import { cn } from "@/lib/utils";
 import { format } from "date-fns";
@@ -65,7 +72,7 @@ import { Calendar } from "@/components/ui/calendar"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 
-import { IoAddCircle, IoSearch  } from "react-icons/io5";
+import { IoAddCircle, IoSearch, IoReturnUpForwardOutline  } from "react-icons/io5";
 import { CalendarIcon } from "@radix-ui/react-icons";
 import { LuSettings2 } from "react-icons/lu";
 
@@ -143,6 +150,16 @@ function SingleTask({taskId}) {
               <CardContent>
                 <p className={isCompleted?'font-semibold text-md text-muted-foreground line-through' : 'font-semibold text-md'}>{task.description}</p>
               </CardContent>
+              <CardFooter className='flex justify-end flex-row'>
+              <TooltipProvider>
+                  <Tooltip>
+                    <TooltipTrigger asChild><Button variant='ghost' className='px-5 m-0 py-1'><IoReturnUpForwardOutline className='h-5 w-5' /></Button></TooltipTrigger>
+                    <TooltipContent>
+                      <p>Shift to next day</p>
+                    </TooltipContent>
+                  </Tooltip>
+                </TooltipProvider>
+                </CardFooter>
             </Card>
     )
   }

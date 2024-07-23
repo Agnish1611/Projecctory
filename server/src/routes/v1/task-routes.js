@@ -24,6 +24,10 @@ router.delete('/:id',
 router.patch('/:id',
     taskController.updateTask);
 
+// /api/v1/task/shift/:id PATCH
+router.patch('/shift/:id',
+    taskController.shiftTask);
+
 // /api/v1/task/complete/:id PATCH
 router.patch('/complete/:id',
     taskController.completeTask);

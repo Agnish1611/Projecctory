@@ -5,7 +5,6 @@ const taskService = new TaskService();
     async function createTask(req, res) {
         try {
             const data = parseUserData(req, true);
-    
             const task = await taskService.create(data);
             return res.status(201).json({
                 data: task,
@@ -14,11 +13,30 @@ const taskService = new TaskService();
                 error: {}
             });
         } catch (error) {
-            console.log('controller error',error);
             return res.status(500).json({
                 data: {},
                 success: false,
                 message: 'Failed to create the task',
+                error: error
+            });
+        }
+    }
+
+    async function shiftTask(req, res) {
+        try {
+            const id = req.params.id;
+            const response = await taskService.shiftTask(id);
+            return res.status(200).json({
+                data: response,
+                success: true,
+                message: 'Successfully shifted the task',
+                error: {}
+            });
+        } catch (error) {
+            return res.status(500).json({
+                data: {},
+                success: false,
+                message: 'Failed to shift the task',
                 error: error
             });
         }
@@ -162,6 +180,9 @@ const taskService = new TaskService();
         if (query.date) {
             filter = { date: query.date };
         }
+        else {
+            filter = { date: new Date(new Date().getTime() + 330*60000).toISOString().split('T')[0]};
+        }
         if (query.completed) {
             filter = { ...filter, completed: true };
         }
@@ -182,6 +203,7 @@ const taskService = new TaskService();
 export {
     createTask,
     getTasks,
+    shiftTask,
     getUpcomingTasks,
     updateTask,
     deleteTask,

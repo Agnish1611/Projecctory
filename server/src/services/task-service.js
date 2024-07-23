@@ -9,6 +9,11 @@ class TaskService {
 
     async create(data) {
         try {
+            const recurringType = data.recurring.recurringType;
+            if (recurringType == 'Daily') {
+                const date = new Date(new Date().getTime() + 330*60000).toISOString().split('T')[0];
+                // for (let i=)
+            }
             const task = await this.taskRepo.create(data);
             let labels = data.labels;
 
@@ -24,8 +29,7 @@ class TaskService {
             newLabels = newLabels.map((label) => {
                 return {
                     title: label,
-                    tasks: [task._id],
-                    users: [task.user]
+                    tasks: [task._id]
                 }
             });
 
@@ -33,13 +37,43 @@ class TaskService {
 
             presentLabels.forEach(async (label) => {
                 label.tasks.push(task._id);
-                if (!label.users.includes(task.user)) label.users.push(task.user);
                 await label.save();
             });
 
             return task;
         } catch (error) {
             console.log('error at service',error);
+            throw error;
+        }
+    }
+
+    async shiftTask(id) {
+        try {
+            const task = await this.taskRepo.getById(id);
+            const date = task.date;
+            const labels = task.labels;
+            if (!labels.includes('shifted')) {
+                labels.push('shifted');
+                const isPresent = await this.labelRepo.findByName('shifted');
+                if (isPresent.title == 'shifted') {
+                    isPresent.tasks.push(task._id);
+                    await isPresent.save();
+                }
+                else {
+                    const newLabel = [
+                        {
+                            title: 'shifted',
+                            tasks: [task._id]
+                        }
+                    ];
+                    await this.labelRepo.bulkCreate(newLabel);
+                }
+            }
+            const newDate = this.#getNextDate(date);
+            const res = await this.taskRepo.update(id, {date: newDate, labels: labels, priority: 3});
+            return res;
+        } catch (error) {
+            console.log(error);
             throw error;
         }
     }
@@ -114,6 +148,42 @@ class TaskService {
             console.log(error);
             throw error;
         }
+    }
+
+    #getNextDate(date) {
+        let day = date.substring(8, 10);
+        let month = date.substring(5, 7);
+        let year = date.substring(0, 4);
+        const checkYear = Number(year);
+        let leap = false;
+        if ((0 == checkYear % 4) && (0 != checkYear % 100) || (0 == checkYear % 400)) leap = true;
+        else leap = false;
+        if (day == '31' && (month == '01' || month == '03' || month == '05' || month == '07' || month == '08' || month == '10')) {
+            day = '01';
+            if (month == '10') month = '11';
+            else month = '0' + (Number(month)+1);
+        }
+        else if (day == '30' && (month == '04' || month == '06' || month == '09' || month == '11')) {
+            day = '01';
+            if (month == '11') month = '12';
+            else if (month == '09') month = '10';
+            else month = '0' + (Number(month) + 1);
+        }
+        else if ((day == '29' && leap && month == '02') || (day == '28' && !leap && month == '02')){
+            day = '01';
+            month = '03';
+        }
+        else if (day == '31' && month == '12') {
+            year = (Number(year)+1)+'';
+            month = '01';
+            day = '01';
+        }
+        else {
+            if (day <= '08') day = '0' + (Number(day)+1);
+            else day = '' + (Number(day)+1); 
+        }
+    
+        return (year+'-'+month+'-'+day);
     }
 }
 
