@@ -5,12 +5,12 @@ import Navbar from '@/sections/Navbar';
 function UpcomingPage() {
   return (
     <>
-    <div className='overflow-hidden'>
+      <div className='overflow-hidden'>
         <Navbar active="upcoming" />
-    </div>
-    <div className='overflow-x-scroll'>
+      </div>
+      <div className='overflow-x-scroll'>
         <Upcoming />
-    </div>
+      </div>
     </>
   )
 }
