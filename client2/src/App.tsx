@@ -8,6 +8,7 @@ import Settings from "./pages/Settings";
 import Tasks from "./pages/Tasks";
 import Analytics from "./pages/Analytics";
 import Friends from "./pages/Friends";
+import Project from "./pages/Project";
 
 const App = () => {
   return (
@@ -21,6 +22,7 @@ const App = () => {
             <Route path="tasks" element={<Tasks />} />
             <Route path="analytics" element={<Analytics />} />
             <Route path="friends" element={<Friends />} />
+            <Route path="project" element={<Project />} />
           </Route>
         </Routes>
       </BrowserRouter>

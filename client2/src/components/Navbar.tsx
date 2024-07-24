@@ -5,11 +5,14 @@ import { GoPeople } from "react-icons/go";
 import { AiOutlineLineChart } from "react-icons/ai";
 import { LiaProjectDiagramSolid } from "react-icons/lia";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
+
 import { Link, useLocation } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { Suspense, useState } from 'react';
+
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAtom } from '@/store/user';
 import { projectsAtom } from '@/store/projects';
-import { Suspense, useState } from 'react';
+import { currentProjectAtom } from '@/store/currentProject';
 
 let navItems = [
     [
@@ -55,15 +58,22 @@ let navItems = [
 ]
 
 const ProjectSection = () => {
+    const location = useLocation();
+
     const projects = useRecoilValue(projectsAtom);
+    const [currentProject, setCurrentProject] = useRecoilState(currentProjectAtom);
 
     if (!projects.length) {
-        return (<div>No projects</div>);
+        return (<li className='py-2 pl-7 rounded-lg m-1 font-semibold text-muted-foreground'>No projects</li>);
     } else {
         return (
             <>
                 {projects.map((project, i) => {
-                    return (<li key={i} className='py-2 pl-7 rounded-lg cursor-pointer m-1 hover:bg-accent-foreground font-semibold'>{project.name}</li>)
+                    return (
+                        <Link to='/project'>
+                            <li key={i} className={`py-2 pl-7 rounded-lg cursor-pointer m-1 font-semibold ${ currentProject._id==project._id && location.pathname=='/project'  ? `bg-zinc-800` : `hover:bg-accent-foreground`}`} onClick={() => {setCurrentProject(project)}}>{project.name}</li>
+                        </Link>
+                    )
                 })}
             </>
         )
@@ -74,7 +84,7 @@ const Navbar = () => {
     const location = useLocation();
     
     const user = useRecoilValue(userAtom);
-    const [projectsActive, setProjectsActive] = useState(false);
+    const [projectsActive, setProjectsActive] = useState(location.pathname == '/project');
 
     return (
         <section className='h-screen w-[15rem] bg-zinc-950 text-white font-quicksand'>
@@ -115,9 +125,9 @@ const Navbar = () => {
                         { !projectsActive ? <IoIosArrowDown className='h-6 w-6 mr-2' /> : <IoIosArrowUp className='h-6 w-6 mr-2' />}
                     </div>
                 </div>
-                <ul className='mx-5 py-2'>
+                <ul className='mx-5 py-2 max-h-[150px] overflow-y-scroll overflow-x-hidden'>
                     {projectsActive && 
-                        <Suspense fallback={'Loading ...'}>
+                        <Suspense fallback={<li className='py-2 pl-7 rounded-lg m-1 font-semibold text-muted-foreground'>Loading...</li>}>
                             <ProjectSection />
                         </Suspense>
                     }   
