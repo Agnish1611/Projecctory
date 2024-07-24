@@ -6,9 +6,9 @@ const taskService = new TaskService();
 
 const createProject = async (req, res) => {
     try {
-        const { admin, name, participants } = req.body;
+        const { admins, name, participants } = req.body;
 
-        const response = await projectService.createProject({ admins: [admin], name, participants });
+        const response = await projectService.createProject({ admins, name, participants });
         return res.status(201).json({
             msg: 'Created a new project',
             data: response
@@ -52,8 +52,8 @@ const updateProject = async (req, res) => {
 const addTask = async (req, res) => {
     try {
         const projectId = req.params.id;
-        const { description, date, time } = req.body;
-        let taskData = { description, date, time };
+        const { description, deadline } = req.body;
+        let taskData = { description, deadline };
 
         if (req.body?.labels.length) taskData = { ...taskData, labels: req.body.labels };
         if (req.body?.priority) taskData = { ...taskData, priority: req.body.priority };

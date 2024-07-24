@@ -1,8 +1,7 @@
 import express from 'express';
 
 import { createProject, getProjectsByUser, updateProject, deleteProject, addTask } from '../controllers/projectController.js';
-import { validateCreateRequest, validateUpdateRequest } from '../middlewares/projectMiddleware.js';
-import { validateCreateRequest as validateAddTaskRequest } from '../middlewares/taskMiddleware.js';
+import { validateCreateRequest, validateUpdateRequest, validateAddTaskRequest } from '../middlewares/projectMiddleware.js';
 
 const router = express.Router();
 

@@ -35,10 +35,10 @@ class ProjectService {
             const adminProjects = await this.projectRepo.getProjects(adminFilter);
             const participantProjects = await this.projectRepo.getProjects(participantFilter);
 
-            return {
-                adminProjects,
-                participantProjects
-            }
+            return [
+                ...adminProjects,
+                ...participantProjects
+            ]
         } catch (error) {
             throw error
         }

@@ -7,7 +7,7 @@ const taskSchema = z.object({
     labels: z.array(z.string()).optional(),
     priority: z.enum(['normal', 'important', 'urgent']).optional(),
     date: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/),
-    time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/),
+    time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
     recurring: z.object({
         type: z.enum(['Daily', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
         startDate: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/),
