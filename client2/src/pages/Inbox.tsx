@@ -1,6 +1,6 @@
 const Inbox = () => {
   return (
-    <div>Inbox</div>
+    <section className="w-full h-screen bg-zinc-950 flex gap-2 p-2 text-white">Inbox</section>
   )
 }
 

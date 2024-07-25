@@ -1,13 +1,13 @@
 import z from 'zod';
 
 const taskSchema = z.object({
-    user: z.string().optional(),
+    user: z.string(),
     description: z.string().max(300, 'Description can be of maximum 300 characters'),
     completed: z.boolean().optional(),
     labels: z.array(z.string()).optional(),
     priority: z.enum(['normal', 'important', 'urgent']).optional(),
     date: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/),
-    time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
+    time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
     recurring: z.object({
         type: z.enum(['Daily', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
         startDate: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/),

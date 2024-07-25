@@ -4,10 +4,10 @@ const taskService = new TaskService();
 
 const createTask = async (req, res) => {
     try {
-        const { description, date, time } = req.body;
-        let taskData = { description, date, time };
+        const { description, date, user } = req.body;
+        let taskData = { description, date, user };
 
-        if (req.body?.user) taskData = { ...taskData, user: req.body.user };
+        if (req.body?.time) taskData = { ...taskData, time: req.body.time };
         if (req.body?.labels.length) taskData = { ...taskData, labels: req.body.labels };
         if (req.body?.priority) taskData = { ...taskData, priority: req.body.priority };
         if (req.body?.assignee) taskData = { ...taskData, assignee: req.body.assignee };

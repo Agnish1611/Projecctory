@@ -1,6 +1,6 @@
 import Icon from '../assets/profile_icons/boy-1.jpg';
 import { RiHomeSmile2Line, RiSettingsLine, RiLogoutCircleRLine} from "react-icons/ri"
-import { LuInbox, LuClipboardCheck } from "react-icons/lu";
+import { LuInbox } from "react-icons/lu";
 import { GoPeople } from "react-icons/go";
 import { AiOutlineLineChart } from "react-icons/ai";
 import { LiaProjectDiagramSolid } from "react-icons/lia";
@@ -36,12 +36,6 @@ let navItems = [
         },
     ],
     [
-        {
-            title: "Tasks",
-            icon: <LuClipboardCheck className='w-6 h-6 mx-3' />,
-            count: true,
-            link: '/tasks'
-        },
         {
             title: "Analytics",
             icon: <AiOutlineLineChart className='w-6 h-6 mx-3' />,
@@ -87,7 +81,7 @@ const Navbar = () => {
     const [projectsActive, setProjectsActive] = useState(location.pathname == '/project');
 
     return (
-        <section className='h-screen w-[15rem] bg-zinc-950 text-white font-quicksand'>
+        <section className='h-screen w-[15rem] bg-[#070707] text-white font-quicksand'>
             <div className='flex gap-5 py-5 px-6 items-center'>
                 <img src={Icon} className='h-8 w-8 rounded-full' />
                 <div className='w-full flex justify-between items-center'>

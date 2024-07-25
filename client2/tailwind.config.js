@@ -19,6 +19,9 @@ module.exports = {
       },
     },
     extend: {
+      height: {
+        'task-height': 'calc(100% / 24)', // Adjust based on your time slot height
+      },
       fontFamily: {
         quicksand: ['"Quicksand"', ...defaultTheme.fontFamily.sans]
       },

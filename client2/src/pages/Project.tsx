@@ -3,14 +3,19 @@ import { useRecoilValueLoadable } from 'recoil'
 
 const Project = () => {
     const project = useRecoilValueLoadable(currentProjectAtom);
-
-    if (project.state == 'loading') {
-        return (<div>Loading...</div>)
-    } else {
-        return (
-            <div>{project.contents?.name}</div>
-        )
-    }
+    return(
+        <section className="w-full h-screen bg-zinc-950 flex gap-2 p-2 text-white">
+            {
+                (project.state == 'loading') ?
+                    (<div>Loading...</div>)
+                    :
+                    (
+                        <div>{project.contents?.name}</div>
+                    )
+                
+            }
+        </section>
+    )
 }
 
 export default Project
