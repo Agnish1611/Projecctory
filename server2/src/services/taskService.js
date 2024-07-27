@@ -62,6 +62,23 @@ class TaskService {
             throw error;
         }
     }
+
+    async getSkippedTasks() {
+        try {
+            const date = new Date();
+            const tasks = await this.taskRepo.findTasks({completed: false});
+            const newTasks = tasks.filter((task) => {
+                return (
+                    Number(task.date.substring(6, 10)) < date.getFullYear() || 
+                    Number(task.date.substring(3, 5)) < date.getMonth()+1 ||
+                    Number(task.date.substring(0, 2)) < date.getDate()
+                )
+            });
+            return newTasks;
+        } catch (error) {
+            throw error;
+        }
+    }
 }
 
 export default TaskService;

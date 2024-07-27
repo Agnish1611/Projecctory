@@ -11,6 +11,7 @@ import Meetings from "@/components/Meetings";
 const Overview = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
   const [todoTasks, setTodoTasks] = useState([]);
+  const [skippedTasks, setSkippedTasks] = useState([]);
 
   const user = useRecoilValue(userAtom);
 
@@ -34,6 +35,16 @@ const Overview = () => {
       })
   }, []);
 
+  useEffect(() => {
+    axios.get('/tasks/skipped')
+      .then((res) => {
+        setSkippedTasks(res.data?.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      })
+  }, []);
+
   return (
     <section className="w-full h-screen bg-zinc-950 flex gap-2 p-2 font-quicksand overflow-hidden">
         <div className="flex flex-col gap-2 h-full">
@@ -50,14 +61,14 @@ const Overview = () => {
                 </div>
                 <div className="h-full flex rounded-3xl mr-2 w-[19.7rem] items-center justify-between bg-zinc-900 p-10 text-white">
                   <div>
-                    <div className="text-4xl font-bold my-2">{todoTasks.length}</div>
+                    <div className="text-4xl font-bold my-2">{todoTasks.length - skippedTasks.length}</div>
                     <div className="text-xl font-semibold">To-do Tasks</div>
                   </div>
                   <img src={TodoTask} className="h-32 w-32 rounded-full" />
                 </div>
                 <div className="h-full flex rounded-3xl mr-2 w-[19.7rem] items-center justify-between bg-zinc-900 p-10 text-white">
                   <div>
-                    <div className="text-4xl font-bold my-2">1</div>
+                    <div className="text-4xl font-bold my-2">{skippedTasks.length}</div>
                     <div className="text-xl font-semibold">Tasks Skipped</div>
                   </div>
                   <img src={NotCompleted} className="h-32 w-32 rounded-full" />

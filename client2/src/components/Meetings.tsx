@@ -20,7 +20,7 @@ const meetings = [
         project: 'Projecctory',
         access: 'Admin',
         link: 'meet.google.com/ful-shqq-cmt',
-        status: 'In progress',
+        status: 'Completed',
         time: '02:00-03:00'
     },
     {
@@ -28,7 +28,7 @@ const meetings = [
         project: 'Projecctory',
         access: 'Admin',
         link: 'meet.google.com/adf-cksd-mcf',
-        status: 'Upcoming',
+        status: 'Completed',
         time: '09:00-10:00'
     },
     {
@@ -62,17 +62,17 @@ const colors = ['bg-cyan-200', 'bg-purple-400', 'bg-pink-400'];
 const Meeting = ({meeting, color}) => {
     const [copied, setCopied] = useState(false);
     return (
-        <div className={`w-full h-fit min-h-[150px] ${color} rounded-3xl my-5 p-5`}>
+        <div className={`w-full h-fit min-h-[150px] ${meeting.status == 'Completed' ? `bg-zinc-500` : color} rounded-3xl my-5 p-5`}>
             <div className="flex justify-between items-center">
                 <div className="flex flex-col">
-                    <div className="flex text-xs font-semibold text-zinc-600 items-center mb-2 gap-2"><LuAlarmClock className="h-4 w-4" /> Time: {meeting.time}</div>
-                    <div className="text-sm font-bold">{meeting.description}</div> 
+                    <div className="flex text-xs font-semibold text-zinc-700 items-center mb-2 gap-2"><LuAlarmClock className="h-4 w-4" /> Time: {meeting.time}</div>
+                    <div className={`text-sm ${meeting.status == 'Completed' && `line-through`} font-bold`}>{meeting.description}</div> 
                 </div>
                 <a target="_blank" href={'https://'+meeting.link}><BsArrowUpRightCircle className="h-8 w-8 hover:scale-110 cursor-pointer transition" /></a>
             </div>
             <div className="my-3 flex justify-between">
-                <div className="text-xs font-semibold text-zinc-600">Project: <span className="text-zinc-800">{meeting.project}</span></div>
-                <div className="text-xs font-semibold text-zinc-600">Access: <span className="text-zinc-800">{meeting.access}</span></div>
+                <div className="text-xs font-semibold text-zinc-700">Project: <span className="text-zinc-800">{meeting.project}</span></div>
+                <div className="text-xs font-semibold text-zinc-700">Access: <span className="text-zinc-800">{meeting.access}</span></div>
             </div>
             <div className="bg-zinc-900 w-full text-xs py-2 px-3 items-center group rounded-full font-bold flex justify-between text-zinc-300 cursor-pointer" onClick={() => {
                     navigator.clipboard.writeText(meeting.link);
@@ -83,7 +83,7 @@ const Meeting = ({meeting, color}) => {
                 <BiSolidCopy className="h-3 w-3 group-hover:scale-125 transition text-zinc-300" /> :
                 <IoCheckmarkDoneSharp className="h-3 w-3 text-zinc-300" />}
             </div>
-            <div className="text-xs mt-3 font-semibold flex gap-2 items-center text-zinc-600">
+            <div className="text-xs mt-3 font-semibold flex gap-2 items-center text-zinc-700">
                 Status: 
                 <span className="border-zinc-900 border text-zinc-900 px-3 py-1 rounded-full">{meeting.status}</span>
             </div>

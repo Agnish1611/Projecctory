@@ -58,7 +58,7 @@ const updateTask = async (req, res) => {
         const taskId = req.params.id;
         let taskData = {};
         if (req.body?.user) taskData = { ...taskData, user: req.body.user };
-        if (req.body?.completed) taskData = { ...taskData, completed: req.body.completed };
+        if (req.body?.completed == true || req.body?.completed == false) taskData = { ...taskData, completed: req.body.completed };
         if (req.body?.description) taskData = { ...taskData, description: req.body.description };
         if (req.body?.date) taskData = { ...taskData, date: req.body.date };
         if (req.body?.labels?.length) taskData = { ...taskData, labels: req.body.labels };
@@ -70,7 +70,7 @@ const updateTask = async (req, res) => {
             taskData = { ...taskData, recurring };
         }
 
-        if (!req.body?.user && !req.body?.description && !req.body?.date && !req.body?.labels?.length && !req.body?.priority && !req.body?.assignee && !req.body?.recurring?.type && !req.body.completed) {
+        if (!req.body?.user && !req.body?.description && !req.body?.date && !req.body?.labels?.length && !req.body?.priority && !req.body?.assignee && !req.body?.recurring?.type && req.body.completed != true && req.body.completed != false) {
             return res.status(400).json({
                 err: 'Missing any valid user data'
             });
@@ -123,10 +123,26 @@ const assignTask = async (req, res) => {
     }
 }
 
+const getSkippedTasks = async (req, res) => {
+    try {
+        const response = await taskService.getSkippedTasks();
+        return res.status(200).json({
+            msg: 'Fetched the skipped tasks',
+            data: response
+        });
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'Something went wrong',
+            err: error
+        });
+    }
+}
+
 export {
     createTask,
     getTasks,
     updateTask,
     deleteTask,
-    assignTask
+    assignTask,
+    getSkippedTasks
 }

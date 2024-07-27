@@ -1,6 +1,8 @@
 import { IoIosArrowDown } from "react-icons/io";
 import { BsPlusCircleFill } from "react-icons/bs";
 import { LuAlarmClock } from "react-icons/lu";
+import { VscSettings } from "react-icons/vsc";
+import { IoSearchOutline } from "react-icons/io5";
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,6 +12,14 @@ import {
   DropdownMenuRadioItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+  
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosConfig";
 import { useRecoilValue } from "recoil";
@@ -37,7 +47,7 @@ const Task = ({task}) => {
     return (
         <div className={`w-full flex flex-col h-fit min-h-[150px] ${!isCompleted ? colors[priorites.indexOf(task?.priority)] : `bg-zinc-400`} rounded-3xl p-5 my-5`}>
             <div className="checkbox-wrapper-24 relative top-[-3px] left-[140px]">
-                <input type="checkbox" id="check-24" name="check" checked={isCompleted} />
+                <input type="checkbox" id="check-24" name="check" checked={isCompleted} readOnly />
                 <label htmlFor="check-24" onClick={() => {
                     setIsCompleted(!isCompleted);
                     handleCheckbox(tasksUrl+task._id);
@@ -49,9 +59,9 @@ const Task = ({task}) => {
             <div className={`${isCompleted && `line-through`}`}>{task?.description}</div>
             {task?.labels.length && 
                 <div className="flex flex-wrap my-2">
-                    {task.labels.map((label) => {
+                    {task.labels.map((label, i) => {
                         return (
-                            <div className="px-2 mx-1 text-xs w-fit border border-zinc-600 rounded-full">{label}</div>
+                            <div key={i} className="px-2 mx-1 text-xs w-fit border border-zinc-600 rounded-full">{label}</div>
                         )
                     })}
                 </div>
@@ -60,7 +70,7 @@ const Task = ({task}) => {
     )
 }
 
-const Day = ({date}) => {
+const Day = ({date, priority, label}) => {
     const day = date.substring(8, 10);
     const week = date.substring(0, 3);
     const monthNo = months.indexOf(date.substring(4, 7))+1;
@@ -73,15 +83,16 @@ const Day = ({date}) => {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        axios.get(tasksUrl+'?user='+user.id+'&date='+dateString)
+        const priorityQuery = priority == '' ? '' : '&priority='+priority ;
+        const labelQuery = label == '' ? '' : '&label='+label;
+        axios.get(tasksUrl+'?user='+user.id+'&date='+dateString+priorityQuery+labelQuery)
             .then((res) => {
                 setTasks(res.data?.data);
-                console.log(res.data?.data);
             })
             .catch((err) => {
                 console.log(err);
             })
-    }, []);
+    }, [priority, label]);
     
     return (
         <div className="min-w-[200px] pt-10 mx-5">
@@ -114,6 +125,10 @@ const TaskCalendar = () => {
         date.setDate(date.getDate() + 1);
         days.push(date.toDateString());
     }
+
+    const [priority, setPriority] = useState('');
+    const [label, setLabel] = useState('');
+    const [labelValue, setLabelValue] = useState('');
     
     return (
         <div>
@@ -131,7 +146,7 @@ const TaskCalendar = () => {
                           <DropdownMenuTrigger asChild>
                               <Button variant="outline" className="flex gap-2 rounded-3xl border-foreground border-2 font-semibold">{weeks} week{weeks != "1" && 's'}<IoIosArrowDown /></Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent className="w-56">
+                          <DropdownMenuContent className="w-56" defaultValue='1'>
                               <DropdownMenuRadioGroup value={weeks} onValueChange={setWeeks}>
                                   <DropdownMenuRadioItem value="1" className="font-semibold cursor-pointer">1 week</DropdownMenuRadioItem>
                                   <DropdownMenuRadioItem value="2" className="font-semibold cursor-pointer">2 weeks</DropdownMenuRadioItem>
@@ -143,8 +158,42 @@ const TaskCalendar = () => {
               </div>
             <div className="flex overflow-scroll no-scrollbar h-[90%]">
                 {days.map((day, i) => {
-                    return (<Day key={i} date={day} />)
+                    return (<Day key={i} date={day} label={labelValue} priority={priority} />)
                 })}
+            </div>
+            <div className="px-10 w-[60rem] h-10 rounded-full glass-bg absolute bottom-[224px] font-semibold text-xs left-[215px] text-white flex justify-around items-center">
+                <div className="pr-10 flex gap-2 items-center text-sm border-r border-accent"><VscSettings className="h-5 w-5" /> Filters</div>
+                <div className="flex gap-4 items-center px-10 border-r border-accent">
+                    <span className="font-regular text-zinc-400">Priority:</span>
+                    {
+                        colors.map((color, i) => {
+                            return (
+                                <TooltipProvider>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild >
+                                            <div className={`h-3 w-3 rounded-full ${color} cursor-pointer transition ${priority == priorites[i] && `scale-150`}`} onClick={() => {setPriority(priorites[i])}}></div>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>{priorites[i]}</p>
+                                        </TooltipContent>
+                                    </Tooltip>
+                                </TooltipProvider>
+                            )
+                        })
+                    }
+                </div>
+                <div className="px-10 flex gap-5 items-center">
+                    <span className="font-regular text-zinc-400">Label:</span>
+                    <input className="py-1 px-3 w-fit rounded-full bg-transparent border border-accent" placeholder="Search label" value={label} onChange={(e) => setLabel(e.target.value)} />
+                    <IoSearchOutline className="h-5 w-5" onClick={() => {setLabelValue(label)}}  />
+                </div>
+                <div className="px-10 border-l border-accent">
+                    <Button className="text-xs py-1 px-3 h-fit rounded-full" variant='ghost' onClick={() => {
+                        setLabelValue('');
+                        setLabel('');
+                        setPriority('');
+                    }}>Reset</Button>
+                </div>
             </div>
         </div>
     )

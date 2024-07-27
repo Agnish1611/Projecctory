@@ -193,3 +193,12 @@ body {
   background: #fff;
   transition: width 150ms ease 100ms;
 }
+
+.glass-bg{
+  background: rgba(0, 0, 0, 0.67);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(7px);
+  -webkit-backdrop-filter: blur(7px);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+}
