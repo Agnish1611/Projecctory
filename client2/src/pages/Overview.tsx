@@ -7,6 +7,7 @@ import TaskCompleted from '../assets/task_images/task_completed.jpg';
 import TodoTask from '../assets/task_images/todo_task.jpg';
 import NotCompleted from '../assets/task_images/not_completed.jpg';
 import Meetings from "@/components/Meetings";
+import { Toaster } from "@/components/ui/toaster";
 
 const Overview = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -78,6 +79,7 @@ const Overview = () => {
         <div className="h-full w-full bg-zinc-900 rounded-3xl p-5 overflow-hidden">
           <Meetings />
         </div>
+        <Toaster />
     </section>
   )
 }

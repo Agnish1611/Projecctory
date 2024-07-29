@@ -9,8 +9,7 @@ const taskSchema = z.object({
     date: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/),
     time: z.string().regex(/^([0-1]?[0-9]|2[0-3]):[0-5][0-9]-([0-1]?[0-9]|2[0-3]):[0-5][0-9]$/).optional(),
     recurring: z.object({
-        type: z.enum(['Daily', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']),
-        startDate: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/),
+        type: z.enum(['0', '1', '2', '3', '4', '5', '6', '7']),
         endDate: z.string().regex(/^\d{2}\-\d{2}\-\d{4}$/)
     }).optional(),
     assignee: z.string().optional()

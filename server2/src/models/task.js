@@ -4,7 +4,7 @@ const recurringSchema = new mongoose.Schema({
     type: {
         type: String,
         enum: { 
-            values: ['Daily', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'], 
+            values: ['0', '1', '2', '3', '4', '5', '6', '7'], 
             message: '{VALUE} is not supported' 
         }
     },

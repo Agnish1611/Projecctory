@@ -12,8 +12,8 @@ const createTask = async (req, res) => {
         if (req.body?.priority) taskData = { ...taskData, priority: req.body.priority };
         if (req.body?.assignee) taskData = { ...taskData, assignee: req.body.assignee };
         if (req.body?.recurring) {
-            const { type, startDate, endDate } = req.body.recurring;
-            const recurring = { type, startDate, endDate };
+            const { type, endDate } = req.body.recurring;
+            const recurring = { type, endDate };
             taskData = { ...taskData, recurring };
         }
 

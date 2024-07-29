@@ -10,6 +10,15 @@ class TaskRepository {
         }
     }
 
+    async bulkCreate(tasks) {
+        try {
+            const response = await Task.insertMany(tasks);
+            return response;
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async findTasks(filter) {
         try {
             const response = await Task.find(filter);
