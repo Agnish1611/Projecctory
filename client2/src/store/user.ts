@@ -4,9 +4,10 @@ import { atom } from "recoil";
 export const userAtom = atom({
     key: 'userAtom',
     default: {
-        id: '669f812972b59628addbe3fa',
+        id: '66b52a53c5eac8302c280ff2',
         username: 'agnish',
-        uniqueId: '58ih4wp7',
-        email: 'sukla.baruipur2@gmail.com'
+        uniqueId: 'a6bmffq5',
+        email: 'sukla.baruipur2@gmail.com',
+        accessToken: ''
     }
 });

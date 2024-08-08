@@ -1,3 +1,6 @@
+import bcrypt from 'bcryptjs';
+import jwt, { decode } from 'jsonwebtoken';
+
 import UserRepository from "../repositories/userRepository.js";
 import generateUniqueId from "generate-unique-id";
 
@@ -32,7 +35,59 @@ class UserService {
         } catch (error) {
             throw error;
         }
-    } 
+    }
+
+    async loginUser(email, password) {
+        try {
+            const foundUser = await this.userRepo.findUser({ email });
+
+            if (!foundUser) {
+                return resizeBy.status(401).json({
+                    msg: 'Unauthorized',
+                    err: 'Email does not exist'
+                });
+            }
+
+            const match = bcrypt.compareSync(password, foundUser.password);
+            console.log(match);
+
+            if (!match) {
+                throw { err: 'Password is wrong' }
+            }
+
+            const accessToken = jwt.sign(
+                {
+                    'UserInfo': {
+                        'id': foundUser._id,
+                        'username': foundUser.username,
+                        'uid': foundUser.uniqueId
+                    }
+                }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }
+            );
+
+            const refreshToken = jwt.sign({
+                'username': foundUser.username
+            }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
+
+            return { accessToken, refreshToken };
+        } catch (error) {
+            throw error;
+        }
+    }
+
+    async refresh(decoded) {
+        try {
+            const foundUser = await this.userRepo.findUser({ username: decoded.username });
+                    
+            if (!foundUser) {
+                throw { err: 'Unauthorized' }
+            }
+
+            return foundUser;
+        } catch (error) {
+            throw error;
+        }
+    }
 
     async updateUser(userId, userData) {
         try {

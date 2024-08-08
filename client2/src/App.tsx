@@ -1,5 +1,4 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { RecoilRoot } from "recoil";
 
 import Layout from "./components/Layout";
 import Overview from "./pages/Overview";
@@ -8,13 +7,17 @@ import Settings from "./pages/Settings";
 import Analytics from "./pages/Analytics";
 import Friends from "./pages/Friends";
 import Project from "./pages/Project";
+import AuthLayout from "./components/AuthLayout";
+import Login from "./pages/Login";
 
 const App = () => {
   return (
-    <RecoilRoot>
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Layout />}>
+          <Route path="/" element={<AuthLayout />}>
+            <Route index element={<Login />} />
+          </Route>
+          <Route path='/dash' element={<Layout />}>
             <Route index element={<Overview />} />
             <Route path="inbox" element={<Inbox />} />
             <Route path="settings" element={<Settings />} />
@@ -24,7 +27,6 @@ const App = () => {
           </Route>
         </Routes>
       </BrowserRouter>
-    </RecoilRoot>
   )
 }
 

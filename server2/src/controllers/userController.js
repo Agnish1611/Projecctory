@@ -1,3 +1,5 @@
+import jwt from 'jsonwebtoken';
+
 import UserService from "../services/userService.js";
 
 const userService = new UserService();
@@ -11,6 +13,105 @@ const createUser = async (req, res) => {
         return res.status(201).json({
             msg: 'New user was created',
             data: response
+        });
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'Something went wrong',
+            err: error,
+        });
+    }
+}
+
+const loginUser = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        const { accessToken, refreshToken } = await userService.loginUser(email, password);
+
+        res.cookie('jwt', refreshToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'None',
+            maxAge: 7*24*60*60*1000
+        });
+
+        return res.status(200).json({
+            msg: 'Successfully logged in',
+            accessToken
+        });
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'Something went wrong',
+            err: error,
+        });
+    }
+}
+
+const refresh = async (req, res) => {
+    try {
+        const cookies = req.cookies;
+
+        if (!cookies?.jwt) {
+            return res.status(401).json({
+                msg: 'Unauthorized',
+                err: 'Cookie is invalid'
+            });
+        }
+
+        const refreshToken = cookies.jwt;
+
+        jwt.verify(
+            refreshToken,
+            process.env.REFRESH_TOKEN_SECRET,
+            async (err, decoded) => {
+                if (err) {
+                    throw { err: 'Forbidden' }
+                }
+
+                const foundUser = await userService.refresh(decoded);
+
+                const accessToken = jwt.sign(
+                    {
+                        'UserInfo': {
+                            'id': foundUser._id,
+                            'username': foundUser.username,
+                            'uid': foundUser.uniqueId
+                        }
+                    }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }
+                );
+
+                return res.status(200).json({
+                    msg: 'Token refreshed',
+                    accessToken
+                });
+            }
+        );
+    } catch (error) {
+        return res.status(500).json({
+            msg: 'Something went wrong',
+            err: error,
+        });
+    }
+}
+
+const logout = async (req, res) => {
+    try {
+        const cookies = req.cookies;
+
+        if (!cookies?.jwt) {
+            return res.status(204).json({
+                msg: 'Invalid cookie'
+            });
+        }
+
+        res.clearCookie('jwt', {
+            httpOnly: true,
+            sameSite: 'None',
+            secure: true
+        });
+
+        return res.status(200).json({
+            msg: 'Successfully logged out'
         });
     } catch (error) {
         return res.status(500).json({
@@ -87,6 +188,9 @@ const removeFriend = async (req, res) => {
 
 export {
     createUser,
+    loginUser,
+    refresh,
+    logout,
     updateUser,
     addFriend,
     removeFriend

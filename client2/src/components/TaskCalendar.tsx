@@ -60,11 +60,12 @@ import { useToast } from "./ui/use-toast";
   
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosConfig";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { userAtom } from "@/store/user";
 import z from 'zod';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import { renderTasksAtom } from "@/store/renderTasks";
 
 const tasksUrl = '/tasks/';
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -133,6 +134,7 @@ const Day = ({date, priority, label}) => {
     const user = useRecoilValue(userAtom);
 
     const [tasks, setTasks] = useState([]);
+    const renderTasks = useRecoilValue(renderTasksAtom);
 
     useEffect(() => {
         const priorityQuery = priority == '' ? '' : '&priority='+priority ;
@@ -144,7 +146,7 @@ const Day = ({date, priority, label}) => {
             .catch((err) => {
                 console.log(err);
             })
-    }, [priority, label]);
+    }, [priority, label, renderTasks]);
     
     return (
         <div className="min-w-[200px] pt-10 mx-5">
@@ -166,6 +168,7 @@ const Day = ({date, priority, label}) => {
 function AddTaskForm() {
     const { toast } = useToast();
     const user = useRecoilValue(userAtom);
+    const [renderTasks, setRenderTasks] = useRecoilState(renderTasksAtom);
 
     const form = useForm<z.infer<typeof formSchema>>({
       resolver: zodResolver(formSchema)
@@ -237,6 +240,7 @@ function AddTaskForm() {
         const res = axios.post(tasksUrl, reqObj, {
             headers: {'Content-Type': 'application/json'}
         });
+        setRenderTasks(renderTasks+1);
         toast({
             variant: 'successful',
             title: "Successfully created the tasks"
