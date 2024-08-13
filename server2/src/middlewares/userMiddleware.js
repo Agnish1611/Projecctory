@@ -1,4 +1,5 @@
 import z from 'zod';
+import jwt, { decode } from 'jsonwebtoken';
 
 const userSchema = z.object({
     username: z.string(),
@@ -46,8 +47,33 @@ async function validateFriendRequest(req, res, next) {
     }
 }
 
+function verifyJWT(req, res, next) {
+    const authHeader = req.headers.authorization || req.headers.Authorization ;
+
+    if (!authHeader?.startsWith('Bearer ')) {
+        return res.status(401).json({
+            err: 'Unauthorized'
+        });
+    }
+
+    const token = authHeader.split(' ')[1];
+
+    jwt.verify(
+        token,
+        process.env.ACCESS_TOKEN_SECRET,
+        (err, decoded) => {
+            if (err) return res.status(403).json({
+                err: 'Forbidden'
+            });
+            req.body.user = decoded.UserInfo.id;
+            next();
+        }
+    );
+}
+
 export {
     validateCreateRequest,
     validateUpdateRequest,
-    validateFriendRequest
+    validateFriendRequest,
+    verifyJWT
 }

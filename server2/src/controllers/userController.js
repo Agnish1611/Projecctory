@@ -26,7 +26,7 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const { accessToken, refreshToken } = await userService.loginUser(email, password);
+        const { accessToken, refreshToken, username, friends, uniqueId } = await userService.loginUser(email, password);
 
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
@@ -37,7 +37,11 @@ const loginUser = async (req, res) => {
 
         return res.status(200).json({
             msg: 'Successfully logged in',
-            accessToken
+            accessToken,
+            username,
+            uniqueId,
+            email,
+            friends
         });
     } catch (error) {
         return res.status(500).json({

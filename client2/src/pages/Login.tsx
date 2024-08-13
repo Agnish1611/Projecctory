@@ -1,7 +1,5 @@
 "use client"
 
-import React from 'react';
-
 import { userAtom } from '@/store/user';
 
 import axios from '../api/axiosConfig';
@@ -25,8 +23,9 @@ import { Input } from "@/components/ui/input";
 
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 
-const login_url = '/user/login';
+const login_url = '/users/login';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -53,6 +52,8 @@ function LoginForm() {
 
   const navigate = useNavigate();
 
+  const [ user, setUser ] = useRecoilState(userAtom);
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await axios.post(login_url,
@@ -62,10 +63,20 @@ function LoginForm() {
           withCredentials: true
         }
       );
+
+      const userObj = { ...user,
+        username: response?.data?.username,
+        email: response?.data?.email,
+        uniqueId: response?.data?.uniqueId,
+        friends: response?.data?.friends,
+        accessToken: response?.data?.accessToken
+      };
+      setUser(userObj);
+      
       toast({
         variant: 'successful',
         title: "Successfully logged in",
-        description: `Welcome to Projecctory, ${response.data.data.username}`,
+        description: `Welcome to Projecctory`,
       });
       navigate('/dash');
 

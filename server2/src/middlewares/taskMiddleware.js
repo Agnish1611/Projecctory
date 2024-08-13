@@ -1,7 +1,7 @@
 import z from 'zod';
 
 const taskSchema = z.object({
-    user: z.string(),
+    user: z.string().optional(),
     description: z.string().max(300, 'Description can be of maximum 300 characters'),
     completed: z.boolean().optional(),
     labels: z.array(z.string()).optional(),

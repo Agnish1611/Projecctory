@@ -62,14 +62,20 @@ class UserService {
                         'username': foundUser.username,
                         'uid': foundUser.uniqueId
                     }
-                }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '15m' }
+                }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1m' }
             );
 
             const refreshToken = jwt.sign({
                 'username': foundUser.username
             }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
-            return { accessToken, refreshToken };
+            return { 
+                accessToken, 
+                refreshToken, 
+                username: foundUser.username,
+                uniqueId: foundUser.uniqueId,
+                friends: foundUser.friends
+            };
         } catch (error) {
             throw error;
         }

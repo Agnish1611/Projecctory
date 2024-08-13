@@ -20,19 +20,19 @@ let navItems = [
             title: "Overview",
             icon: <RiHomeSmile2Line className='w-6 h-6 mx-3' />,
             count: false,
-            link: '/'
+            link: '/dash'
         },
         {
             title: "Inbox",
             icon: <LuInbox className='w-6 h-6 mx-3' />,
             count: true,
-            link: '/inbox'
+            link: '/dash/inbox'
         },
         {
             title: "Settings",
             icon: <RiSettingsLine className='w-6 h-6 mx-3' />,
             count: false,
-            link: '/settings'
+            link: '/dash/settings'
         },
     ],
     [
@@ -40,13 +40,13 @@ let navItems = [
             title: "Analytics",
             icon: <AiOutlineLineChart className='w-6 h-6 mx-3' />,
             count: false,
-            link: '/analytics'
+            link: '/dash/analytics'
         },
         {
             title: "Friends",
             icon: <GoPeople className='w-6 h-6 mx-3' />,
             count: true,
-            link: '/friends'
+            link: '/dash/friends'
         },
     ]
 ]

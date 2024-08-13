@@ -8,6 +8,7 @@ export const userAtom = atom({
         username: 'agnish',
         uniqueId: 'a6bmffq5',
         email: 'sukla.baruipur2@gmail.com',
+        friends: [],
         accessToken: ''
     }
 });
