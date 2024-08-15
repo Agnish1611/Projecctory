@@ -35,6 +35,8 @@ import { userAtom } from "@/store/user";
 import { renderTasksAtom } from "@/store/renderTasks";
 import AddTaskForm from "./AddTaskForm";
 import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { useNavigate } from "react-router-dom";
+import { Skeleton } from "./ui/skeleton";
 
 const tasksUrl = '/tasks/';
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -93,9 +95,11 @@ const Day = ({date, priority, label}) => {
     const year = date.substring(11);
     const dateString = day+'-'+month+'-'+year;
 
+    const [tasksLoading, setTasksLoading] = useState(true);
+
     const axiosPrivate = useAxiosPrivate();
 
-    const user = useRecoilValue(userAtom);
+    const navigate = useNavigate();
 
     const [tasks, setTasks] = useState([]);
     const renderTasks = useRecoilValue(renderTasksAtom);
@@ -104,9 +108,14 @@ const Day = ({date, priority, label}) => {
         const priorityQuery = priority == '' ? '' : '&priority='+priority ;
         const labelQuery = label == '' ? '' : '&label='+label;
         axiosPrivate.get(tasksUrl+'?date='+dateString+priorityQuery+labelQuery)
-            .then((res) => {
-                setTasks(res.data?.data);
-            })
+            .then(res => new Promise(resolve => {
+                    setTimeout(() => {
+                        resolve(res);
+                        setTasks(res.data?.data);
+                        setTasksLoading(false);
+                    }, 500);
+                })
+            )
             .catch((err) => {
                 console.log(err);
             })
@@ -117,12 +126,15 @@ const Day = ({date, priority, label}) => {
             <div className={`text-center text-5xl overflow-y-hidden font-bold ${(date == new Date().toDateString()) ? `text-zinc-900` : `text-zinc-400`}`}>{day}<span className="text-sm">/ {week}</span></div>
             <div className={`max-h-[310px] mt-5 h-fit overflow-y-scroll overflow-x-hidden no-scrollbar text-sm font-bold`}>
                 {(date == new Date().toDateString()) && <div className="h-[2px] mx-auto w-10 bg-zinc-900"></div>}
-                {!tasks.length ? <div className="w-full p-5 text-center">No tasks this day</div> : 
-                    tasks.map((task, i) => {
-                        return (
-                            <Task key={i} task={task} />
-                        )
-                    })
+                {tasksLoading 
+                    ? <Skeleton className="h-[150px] w-full" />
+                    : !tasks.length 
+                        ? <div className="w-full p-5 text-center">No tasks this day</div>  
+                        : tasks.map((task, i) => {
+                            return (
+                                <Task key={i} task={task} />
+                            )
+                          })
                 }
             </div>
         </div>

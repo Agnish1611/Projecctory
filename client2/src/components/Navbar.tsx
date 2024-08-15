@@ -6,8 +6,8 @@ import { AiOutlineLineChart } from "react-icons/ai";
 import { LiaProjectDiagramSolid } from "react-icons/lia";
 import { IoIosArrowDown, IoIosArrowUp } from "react-icons/io";
 
-import { Link, useLocation } from 'react-router-dom';
-import { Suspense, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Suspense, useEffect, useState } from 'react';
 
 import { useRecoilState, useRecoilValue } from 'recoil';
 import { userAtom } from '@/store/user';
@@ -78,6 +78,14 @@ const Navbar = () => {
     const location = useLocation();
     
     const user = useRecoilValue(userAtom);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        if (!(user.accessToken)) {
+            navigate('/login');
+        }
+    }, []);
+
     const [projectsActive, setProjectsActive] = useState(location.pathname == '/project');
 
     return (

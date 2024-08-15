@@ -10,12 +10,13 @@ import Project from "./pages/Project";
 import AuthLayout from "./components/AuthLayout";
 import Login from "./pages/Login";
 import PersistLogin from "./components/PersistLogin";
+import Error404 from "./pages/Error404";
 
 const App = () => {
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AuthLayout />}>
+          <Route path="/login" element={<AuthLayout />}>
             <Route index element={<Login />} />
           </Route>
           <Route element={<PersistLogin />}>
@@ -28,6 +29,7 @@ const App = () => {
               <Route path="project" element={<Project />} />
             </Route>
           </Route>
+          <Route path="*" element={<Error404 />} />
         </Routes>
       </BrowserRouter>
   )
