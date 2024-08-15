@@ -65,7 +65,7 @@ function verifyJWT(req, res, next) {
             if (err) return res.status(403).json({
                 err: 'Forbidden'
             });
-            req.body.user = decoded.UserInfo.id;
+            req.user = decoded.UserInfo.id;
             next();
         }
     );

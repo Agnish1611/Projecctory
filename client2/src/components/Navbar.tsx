@@ -64,8 +64,8 @@ const ProjectSection = () => {
             <>
                 {projects.map((project, i) => {
                     return (
-                        <Link to='/project'>
-                            <li key={i} className={`py-2 pl-7 rounded-lg cursor-pointer m-1 font-semibold ${ currentProject._id==project._id && location.pathname=='/project'  ? `bg-zinc-800` : `hover:bg-accent-foreground`}`} onClick={() => {setCurrentProject(project)}}>{project.name}</li>
+                        <Link to='/project' key={i}>
+                            <li className={`py-2 pl-7 rounded-lg cursor-pointer m-1 font-semibold ${ currentProject._id==project._id && location.pathname=='/project'  ? `bg-zinc-800` : `hover:bg-accent-foreground`}`} onClick={() => {setCurrentProject(project)}}>{project.name}</li>
                         </Link>
                     )
                 })}
@@ -86,8 +86,8 @@ const Navbar = () => {
                 <img src={Icon} className='h-8 w-8 rounded-full' />
                 <div className='w-full flex justify-between items-center'>
                     <div className='text-sm font-semibold flex gap-1 flex-col'>
-                        <div>{user.username}</div>
-                        <div className='text-xs font-regular text-muted-foreground'>{user.uniqueId}</div>
+                        <div>{user?.username}</div>
+                        <div className='text-xs font-regular text-muted-foreground'>{user?.uniqueId}</div>
                     </div>
                     <RiLogoutCircleRLine className='h-5 w-5 cursor-pointer hover:scale-125 transition' />
                 </div>

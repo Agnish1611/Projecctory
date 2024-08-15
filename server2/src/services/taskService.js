@@ -80,10 +80,10 @@ class TaskService {
         }
     }
 
-    async getSkippedTasks() {
+    async getSkippedTasks(user) {
         try {
             const date = new Date();
-            const tasks = await this.taskRepo.findTasks({completed: false});
+            const tasks = await this.taskRepo.findTasks({completed: false, user: user});
             const newTasks = tasks.filter((task) => {
                 return (
                     Number(task.date.substring(6, 10)) < new Date().getFullYear() || 

@@ -4,7 +4,8 @@ const taskService = new TaskService();
 
 const createTask = async (req, res) => {
     try {
-        const { description, date, user } = req.body;
+        const user = req.user;
+        const { description, date } = req.body;
         let taskData = { description, date, user };
 
         if (req.body?.time) taskData = { ...taskData, time: req.body.time };
@@ -33,7 +34,7 @@ const createTask = async (req, res) => {
 const getTasks = async (req, res) => {
     try {
         let filter = {};
-        if (req.query?.user) filter = { ...filter, user: req.query.user };
+        filter = { ...filter, user: req.user };
         if (req.query?.date) filter = { ...filter, date: req.query.date };
         if (req.query?.priority) filter = { ...filter, priority: req.query.priority };
         if (req.query?.completed == 'true') filter = { ...filter, completed: true };
@@ -57,7 +58,7 @@ const updateTask = async (req, res) => {
     try {
         const taskId = req.params.id;
         let taskData = {};
-        if (req.body?.user) taskData = { ...taskData, user: req.body.user };
+        taskData = { ...taskData, user: req.user };
         if (req.body?.completed == true || req.body?.completed == false) taskData = { ...taskData, completed: req.body.completed };
         if (req.body?.description) taskData = { ...taskData, description: req.body.description };
         if (req.body?.date) taskData = { ...taskData, date: req.body.date };
@@ -125,7 +126,8 @@ const assignTask = async (req, res) => {
 
 const getSkippedTasks = async (req, res) => {
     try {
-        const response = await taskService.getSkippedTasks();
+        const user = req.user;
+        const response = await taskService.getSkippedTasks(user);
         return res.status(200).json({
             msg: 'Fetched the skipped tasks',
             data: response

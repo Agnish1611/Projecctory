@@ -8,6 +8,8 @@ import TodoTask from '../assets/task_images/todo_task.jpg';
 import NotCompleted from '../assets/task_images/not_completed.jpg';
 import Meetings from "@/components/Meetings";
 import { Toaster } from "@/components/ui/toaster";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
+import { renderTasksAtom } from "@/store/renderTasks";
 
 const Overview = () => {
   const [completedTasks, setCompletedTasks] = useState([]);
@@ -16,35 +18,39 @@ const Overview = () => {
 
   const user = useRecoilValue(userAtom);
 
+  const axiosPrivate = useAxiosPrivate();
+
+  const renderTasks = useRecoilValue(renderTasksAtom);
+
   useEffect(() => {
-    axios.get('/tasks/'+'?user='+user.id+'&completed=true')
+    axiosPrivate.get('/tasks/'+'?completed=true')
       .then((res) => {
         setCompletedTasks(res.data?.data);
       })
       .catch((e) => {
         console.log(e);
       })
-  }, []);
+  }, [renderTasks]);
 
   useEffect(() => {
-    axios.get('/tasks/'+'?user='+user.id+'&completed=false')
+    axiosPrivate.get('/tasks/'+'?completed=false')
       .then((res) => {
         setTodoTasks(res.data?.data);
       })
       .catch((e) => {
         console.log(e);
       })
-  }, []);
+  }, [renderTasks]);
 
   useEffect(() => {
-    axios.get('/tasks/skipped')
+    axiosPrivate.get('/tasks/skipped')
       .then((res) => {
         setSkippedTasks(res.data?.data);
       })
       .catch((e) => {
         console.log(e);
       })
-  }, []);
+  }, [renderTasks]);
 
   return (
     <section className="w-full h-screen bg-zinc-950 flex gap-2 p-2 font-quicksand overflow-hidden">

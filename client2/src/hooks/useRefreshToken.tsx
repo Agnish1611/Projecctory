@@ -13,7 +13,14 @@ const useRefreshToken = () => {
         setUser(prev => {
             console.log(JSON.stringify(prev));
             console.log(response.data.accessToken);
-            return { ...prev, accessToken: response.data.accessToken };
+            return { ...prev,
+                accessToken: response.data.accessToken,
+                id: response.data.id,
+                username: response.data.username,
+                email: response.data.email,
+                friends: response.data.friends,
+                uniqueId: response.data.uniqueId,
+            };
         });
         return response.data.accessToken;
     }

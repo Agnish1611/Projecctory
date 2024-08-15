@@ -9,6 +9,7 @@ import Friends from "./pages/Friends";
 import Project from "./pages/Project";
 import AuthLayout from "./components/AuthLayout";
 import Login from "./pages/Login";
+import PersistLogin from "./components/PersistLogin";
 
 const App = () => {
   return (
@@ -17,17 +18,19 @@ const App = () => {
           <Route path="/" element={<AuthLayout />}>
             <Route index element={<Login />} />
           </Route>
-          <Route path='/dash' element={<Layout />}>
-            <Route index element={<Overview />} />
-            <Route path="inbox" element={<Inbox />} />
-            <Route path="settings" element={<Settings />} />
-            <Route path="analytics" element={<Analytics />} />
-            <Route path="friends" element={<Friends />} />
-            <Route path="project" element={<Project />} />
+          <Route element={<PersistLogin />}>
+            <Route path='/dash' element={<Layout />}>
+              <Route index element={<Overview />} />
+              <Route path="inbox" element={<Inbox />} />
+              <Route path="settings" element={<Settings />} />
+              <Route path="analytics" element={<Analytics />} />
+              <Route path="friends" element={<Friends />} />
+              <Route path="project" element={<Project />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
   )
 }
 
-export default App
+export default App;

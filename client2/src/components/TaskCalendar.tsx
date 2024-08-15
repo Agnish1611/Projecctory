@@ -30,10 +30,11 @@ import {
   
 import { useEffect, useState } from "react";
 import axios from "@/api/axiosConfig";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import { userAtom } from "@/store/user";
 import { renderTasksAtom } from "@/store/renderTasks";
 import AddTaskForm from "./AddTaskForm";
+import useAxiosPrivate from "@/hooks/useAxiosPrivate";
 
 const tasksUrl = '/tasks/';
 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -42,13 +43,17 @@ const colors = ['bg-green-400', 'bg-yellow-300', 'bg-red-400'];
 
 const Task = ({task}) => {
     const [isCompleted, setIsCompleted] = useState(task.completed == "true");
+    const axiosPrivate = useAxiosPrivate();
+
+    const [renderTasks, setRenderTasks] = useRecoilState(renderTasksAtom);
 
     async function handleCheckbox (url) {
         try {
-          await axios.patch(url,
+          await axiosPrivate.patch(url,
             { completed: !isCompleted },
             { headers: { 'Content-Type': 'application/json' }}
           );
+          setRenderTasks(renderTasks+1);
         } catch (error) {
           console.log(error);
         }
@@ -88,6 +93,8 @@ const Day = ({date, priority, label}) => {
     const year = date.substring(11);
     const dateString = day+'-'+month+'-'+year;
 
+    const axiosPrivate = useAxiosPrivate();
+
     const user = useRecoilValue(userAtom);
 
     const [tasks, setTasks] = useState([]);
@@ -96,7 +103,7 @@ const Day = ({date, priority, label}) => {
     useEffect(() => {
         const priorityQuery = priority == '' ? '' : '&priority='+priority ;
         const labelQuery = label == '' ? '' : '&label='+label;
-        axios.get(tasksUrl+'?user='+user.id+'&date='+dateString+priorityQuery+labelQuery)
+        axiosPrivate.get(tasksUrl+'?date='+dateString+priorityQuery+labelQuery)
             .then((res) => {
                 setTasks(res.data?.data);
             })

@@ -86,7 +86,12 @@ const refresh = async (req, res) => {
 
                 return res.status(200).json({
                     msg: 'Token refreshed',
-                    accessToken
+                    accessToken,
+                    'id': foundUser._id,
+                    'username': foundUser.username,
+                    'email': foundUser.email,
+                    'uniqueId': foundUser.uniqueId,
+                    'friends': foundUser.friends,
                 });
             }
         );

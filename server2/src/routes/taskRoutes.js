@@ -7,9 +7,9 @@ import { verifyJWT } from "../middlewares/userMiddleware.js";
 const router = express.Router();
 
 router.post('/', verifyJWT, validateCreateRequest, createTask);
-router.get('/', validateGetRequest, getTasks);
-router.get('/skipped', getSkippedTasks);
-router.patch('/:id', validateUpdateRequest, updateTask);
+router.get('/', verifyJWT, validateGetRequest, getTasks);
+router.get('/skipped', verifyJWT, getSkippedTasks);
+router.patch('/:id', verifyJWT, validateUpdateRequest, updateTask);
 router.delete('/:id', deleteTask);
 router.post('/assign/:id', assignTask);
 
