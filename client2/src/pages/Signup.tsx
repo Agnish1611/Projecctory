@@ -1,7 +1,5 @@
 "use client"
 
-import { userAtom } from '@/store/user';
-
 import axios from '../api/axiosConfig';
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -23,27 +21,27 @@ import { Input } from "@/components/ui/input";
 
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilState } from 'recoil';
 
-const login_url = '/users/login';
+const signup_url = '/users';
 
 const formSchema = z.object({
-  email: z.string().email(),
-  password: z.string(),
+    username: z.string(),
+    email: z.string().email(),
+    password: z.string()
 });
 
-export default function Login() {
+export default function SignUp() {
     return (
       <>
         <div className='h-screen w-screen flex flex-col justify-center items-center'>
-          <div className='text-foreground font-semibold text-xl mb-7 font-quicksand text-zinc-200'>Login</div>
-          <LoginForm />
+          <div className='text-foreground font-semibold text-xl mb-7 font-quicksand text-zinc-200'>Sign Up</div>
+          <SignUpForm />
         </div>
       </>
     );
 }
 
-function LoginForm() {
+function SignUpForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   });
@@ -52,33 +50,22 @@ function LoginForm() {
 
   const navigate = useNavigate();
 
-  const [ user, setUser ] = useRecoilState(userAtom);
-
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await axios.post(login_url,
+      const response = await axios.post(signup_url,
         JSON.stringify(values),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       );
-
-      const userObj = { ...user,
-        username: response?.data?.username,
-        email: response?.data?.email,
-        uniqueId: response?.data?.uniqueId,
-        friends: response?.data?.friends,
-        accessToken: response?.data?.accessToken
-      };
-      setUser(userObj);
       
       toast({
         variant: 'successful',
-        title: "Successfully logged in",
-        description: `Welcome to Projecctory`,
+        title: "Successfully signed in",
+        description: `Now login using your credentials`,
       });
-      navigate('/dash');
+      navigate('/login');
 
     } catch(error) {
         console.log(error);
@@ -88,6 +75,19 @@ function LoginForm() {
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-[25rem] border p-10 rounded-lg font-quicksand text-zinc-200">
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input placeholder="user" {...field} autoComplete='off' />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
@@ -116,7 +116,7 @@ function LoginForm() {
         />
         <div className='flex flex-col items-center'>
           <Button type="submit" variant='secondary'>Submit</Button>
-          <div className='text-sm font-regular mt-5'>Don't have an account? <Link to='/signup'><span className='font-semibold hover:underline cursor-pointer'>Sign Up</span></Link></div>
+          <div className='text-sm font-regular mt-5'>Already have an account? <Link to='/login'><span className='font-semibold hover:underline cursor-pointer'>Login</span></Link></div>
         </div>
       </form>
     </Form>

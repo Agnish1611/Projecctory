@@ -49,6 +49,11 @@ const Task = ({task}) => {
 
     const [renderTasks, setRenderTasks] = useRecoilState(renderTasksAtom);
 
+    useEffect(() => {
+        console.log('inside');
+        setIsCompleted(task.completed == "true");
+    }, [task]);
+
     async function handleCheckbox (url) {
         try {
           await axiosPrivate.patch(url,

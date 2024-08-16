@@ -1,5 +1,5 @@
 import bcrypt from 'bcryptjs';
-import jwt, { decode } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 
 import UserRepository from "../repositories/userRepository.js";
 import generateUniqueId from "generate-unique-id";

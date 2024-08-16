@@ -11,13 +11,15 @@ import AuthLayout from "./components/AuthLayout";
 import Login from "./pages/Login";
 import PersistLogin from "./components/PersistLogin";
 import Error404 from "./pages/Error404";
+import SignUp from "./pages/Signup";
 
 const App = () => {
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/login" element={<AuthLayout />}>
-            <Route index element={<Login />} />
+          <Route path="/" element={<AuthLayout />}>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
           </Route>
           <Route element={<PersistLogin />}>
             <Route path='/dash' element={<Layout />}>

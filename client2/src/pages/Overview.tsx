@@ -139,7 +139,6 @@ const Overview = () => {
         <div className="h-full w-full bg-zinc-900 rounded-3xl p-5 overflow-hidden">
           <Meetings />
         </div>
-        <Toaster />
     </section>
   )
 }
