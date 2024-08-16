@@ -68,6 +68,31 @@ function SignUpForm() {
       navigate('/login');
 
     } catch(error) {
+        if (error?.response?.data?.err?.error === 'Username already taken') {
+            toast({
+                variant: 'destructive',
+                title: "Failed to sign in",
+                description: `Username already taken, try a different username`,
+            });
+        } else if (error?.response?.data?.err?.error === 'Email already in use') {
+            toast({
+                variant: 'destructive',
+                title: "Failed to sign in",
+                description: `Email already in use, try logging in or use another email`,
+            });
+        } else if (error?.response?.status == 400) {
+            toast({
+                variant: 'destructive',
+                title: "Failed to sign in",
+                description: `User details are invalid`,
+            });
+        } else {
+            toast({
+                variant: 'destructive',
+                title: "Failed to sign in",
+                description: `Internal server error`,
+            });
+        }
         console.log(error);
     }
   }

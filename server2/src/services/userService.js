@@ -42,17 +42,14 @@ class UserService {
             const foundUser = await this.userRepo.findUser({ email });
 
             if (!foundUser) {
-                return resizeBy.status(401).json({
-                    msg: 'Unauthorized',
-                    err: 'Email does not exist'
-                });
+                throw { err: 'Email does not exist' };
             }
 
             const match = bcrypt.compareSync(password, foundUser.password);
             console.log(match);
 
             if (!match) {
-                throw { err: 'Password is wrong' }
+                throw { err: 'Password is wrong' };
             }
 
             const accessToken = jwt.sign(

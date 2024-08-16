@@ -44,6 +44,12 @@ const loginUser = async (req, res) => {
             friends
         });
     } catch (error) {
+        if (error.err) {
+            return res.status(401).json({
+                msg: 'Unauthorized',
+                err: error.err
+            });
+        }
         return res.status(500).json({
             msg: 'Something went wrong',
             err: error,

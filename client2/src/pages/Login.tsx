@@ -81,6 +81,19 @@ function LoginForm() {
       navigate('/dash');
 
     } catch(error) {
+        if (error?.response?.status == 401 ) {
+          toast({
+            variant: 'destructive',
+            title: "Failed to login",
+            description: `${error?.response?.data?.err}`,
+          });
+        } else {
+          toast({
+            variant: 'destructive',
+            title: "Failed to login",
+            description: `Internal server error`,
+          });
+        }
         console.log(error);
     }
   }
