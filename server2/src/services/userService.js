@@ -71,7 +71,8 @@ class UserService {
                 refreshToken, 
                 username: foundUser.username,
                 uniqueId: foundUser.uniqueId,
-                friends: foundUser.friends
+                friends: foundUser.friends,
+                profileSetup: foundUser.profileSetup
             };
         } catch (error) {
             throw error;

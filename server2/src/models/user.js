@@ -21,6 +21,19 @@ const userSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    firstName: {
+        type: String,
+    },
+    lastName: {
+        type: String,
+    },
+    pfp: {
+        type: String,
+    },
+    profileSetup: {
+        type: Boolean,
+        default: false
+    },
     friends: [
         {
             type: mongoose.Schema.Types.ObjectId,

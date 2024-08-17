@@ -166,7 +166,7 @@ const TaskCalendar = () => {
     const [labelValue, setLabelValue] = useState('');
     
     return (
-        <div>
+        <div className="h-[100rem] w-[60rem] rounded-3xl bg-white overflow-hidden p-5">
             <div className="flex justify-between">
                   <div className="text-2xl font-semibold text-zinc-950 flex items-center gap-2">
                       {day} {month},
@@ -204,7 +204,7 @@ const TaskCalendar = () => {
                     return (<Day key={i} date={day} label={labelValue} priority={priority} />)
                 })}
             </div>
-            <div className="px-10 w-[60rem] h-10 rounded-full glass-bg absolute bottom-[224px] font-semibold text-xs left-[215px] text-white flex justify-around items-center">
+            <div className="px-10 h-10 rounded-full glass-bg inset-0 relative top-[-14px] font-semibold text-xs text-white flex justify-around items-center">
                 <div className="pr-10 flex gap-2 items-center text-sm border-r border-accent"><VscSettings className="h-5 w-5" /> Filters</div>
                 <div className="flex gap-4 items-center px-10 border-r border-accent">
                     <span className="font-regular text-zinc-400">Priority:</span>

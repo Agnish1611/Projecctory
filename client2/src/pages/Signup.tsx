@@ -67,7 +67,7 @@ function SignUpForm() {
       });
       navigate('/login');
 
-    } catch(error) {
+    } catch(error: any) {
         if (error?.response?.data?.err?.error === 'Username already taken') {
             toast({
                 variant: 'destructive',

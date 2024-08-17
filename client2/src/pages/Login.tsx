@@ -69,7 +69,8 @@ function LoginForm() {
         email: response?.data?.email,
         uniqueId: response?.data?.uniqueId,
         friends: response?.data?.friends,
-        accessToken: response?.data?.accessToken
+        accessToken: response?.data?.accessToken,
+        profileSetup: response?.data.profileSetup
       };
       setUser(userObj);
       
@@ -78,9 +79,13 @@ function LoginForm() {
         title: "Successfully logged in",
         description: `Welcome to Projecctory`,
       });
-      navigate('/dash');
+      if (response.data.profileSetup) {
+        navigate('/dash');
+      } else {
+        navigate('/setup');
+      }
 
-    } catch(error) {
+    } catch(error: any) {
         if (error?.response?.status == 401 ) {
           toast({
             variant: 'destructive',

@@ -9,6 +9,10 @@ export const userAtom = atom({
         uniqueId: null,
         email: null,
         friends: null,
-        accessToken: null
+        firstName: null,
+        lastName: null,
+        pfp: null,
+        accessToken: null,
+        profileSetup: null
     }
 });

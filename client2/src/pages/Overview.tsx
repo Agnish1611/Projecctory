@@ -73,9 +73,7 @@ const Overview = () => {
   return (
     <section className="w-full h-screen bg-zinc-950 flex gap-2 p-2 font-quicksand overflow-hidden">
         <div className="flex flex-col gap-2 h-full">
-            <div className="h-[100rem] w-[60rem] rounded-3xl bg-white overflow-hidden p-5">
-              <TaskCalendar />
-            </div>
+            <TaskCalendar />
             <div className="flex h-full w-fit mt-0">
                 <div className="h-full flex rounded-3xl mr-2 w-[19.7rem] items-center justify-between bg-zinc-900 p-7 text-white">
                   <div>

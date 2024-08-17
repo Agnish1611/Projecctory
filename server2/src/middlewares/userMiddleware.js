@@ -4,7 +4,11 @@ import jwt, { decode } from 'jsonwebtoken';
 const userSchema = z.object({
     username: z.string(),
     password: z.string(),
-    email: z.string().email()
+    email: z.string().email(),
+    firstName: z.string().optional(),
+    lastName: z.string().optional(),
+    pfp: z.string().optional(),
+    profileSetup: z.boolean().optional()
 });
 
 async function validateCreateRequest(req, res, next) {
