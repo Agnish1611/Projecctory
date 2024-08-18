@@ -79,11 +79,12 @@ function LoginForm() {
         title: "Successfully logged in",
         description: `Welcome to Projecctory`,
       });
-      if (response.data.profileSetup) {
-        navigate('/dash');
-      } else {
-        navigate('/setup');
-      }
+      navigate('/dash');
+      // if (response.data.profileSetup) {
+      //   navigate('/dash');
+      // } else {
+      //   navigate('/setup');
+      // }
 
     } catch(error: any) {
         if (error?.response?.status == 401 ) {
