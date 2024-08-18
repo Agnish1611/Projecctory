@@ -15,3 +15,5 @@
 - User is also provided with a **calendar-view** of his upcoming tasks.
 - User can **add friends** for a smoother assignment of tasks and projects.
 - User will recieve a **reminder** of all the ppending tasks.
+
+## This project is still under development so a few features are not ready
