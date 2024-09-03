@@ -8,12 +8,10 @@ import Analytics from "./pages/Analytics";
 import Friends from "./pages/Friends";
 import Project from "./pages/Project";
 import AuthLayout from "./components/AuthLayout";
-import Login from "./pages/Login";
 import PersistLogin from "./components/PersistLogin";
 import Error404 from "./pages/Error404";
-import SignUp from "./pages/Signup";
-import ProfileSetup from "./pages/ProfileSetup";
-import Overview2 from "./pages/Overview2";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 
 const App = () => {
   return (
@@ -21,12 +19,11 @@ const App = () => {
         <Routes>
           <Route path="/" element={<AuthLayout />}>
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<SignUp />} />
-            <Route path="/setup" element={<ProfileSetup />} />
+            <Route path="/signup" element={<Signup />} />
           </Route>
           <Route element={<PersistLogin />}>
             <Route path='/dash' element={<Layout />}>
-              <Route index element={<Overview2 />} />
+              <Route index element={<Overview />} />
               <Route path="inbox" element={<Inbox />} />
               <Route path="settings" element={<Settings />} />
               <Route path="analytics" element={<Analytics />} />

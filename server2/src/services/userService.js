@@ -72,7 +72,7 @@ class UserService {
                 username: foundUser.username,
                 uniqueId: foundUser.uniqueId,
                 friends: foundUser.friends,
-                profileSetup: foundUser.profileSetup
+                pfp: foundUser.pfp
             };
         } catch (error) {
             throw error;

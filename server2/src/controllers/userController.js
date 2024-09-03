@@ -26,7 +26,7 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        const { accessToken, refreshToken, username, friends, uniqueId, profileSetup } = await userService.loginUser(email, password);
+        const { accessToken, refreshToken, username, friends, uniqueId, pfp } = await userService.loginUser(email, password);
 
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
@@ -42,7 +42,7 @@ const loginUser = async (req, res) => {
             uniqueId,
             email,
             friends,
-            profileSetup
+            pfp
         });
     } catch (error) {
         if (error.err) {
@@ -99,7 +99,7 @@ const refresh = async (req, res) => {
                     'email': foundUser.email,
                     'uniqueId': foundUser.uniqueId,
                     'friends': foundUser.friends,
-                    'profileSetup': foundUser.profileSetup
+                    'pfp': foundUser.pfp
                 });
             }
         );
@@ -147,14 +147,12 @@ const updateUser = async (req, res) => {
         if (req.body?.firstName) userData = { ...userData, firstName: req.body.firstName };
         if (req.body?.lastName) userData = { ...userData, lastName: req.body.lastName };
         if (req.body?.pfp) userData = { ...userData, pfp: req.body.pfp };
-        if (req.body?.profileSetup) userData = { ...userData, profileSetup: true };
-        else userData = { ...userData, profileSetup: false };
 
-        // if (!req.body?.username && !req.body?.pasword && !req.body?.email && !req.body?.firstName && !req.body?.lastName && !req.body?.pfp){
-        //     return res.status(400).json({
-        //         err: 'Missing any valid user data'
-        //     });
-        // }
+        if (!req.body?.username && !req.body?.pasword && !req.body?.email && !req.body?.firstName && !req.body?.lastName && !req.body?.pfp){
+            return res.status(400).json({
+                err: 'Missing any valid user data'
+            });
+        }
 
         const userId = req.user;
 

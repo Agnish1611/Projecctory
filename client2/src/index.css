@@ -262,3 +262,16 @@ color: #fff!important;
   margin-top:-50px;
   text-align: center;
 }
+
+.bg-gradient{
+  background: rgb(89,24,117);
+  background: radial-gradient(circle, rgb(89, 24, 117) 0%, rgba(0,0,0,1) 49%);
+}
+
+.bg-glass{
+  background: rgba(0, 0, 0, 0.4);
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(50px);
+  -webkit-backdrop-filter: blur(50px);
+}

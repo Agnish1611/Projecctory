@@ -29,10 +29,11 @@ const userSchema = new mongoose.Schema({
     },
     pfp: {
         type: String,
-    },
-    profileSetup: {
-        type: Boolean,
-        default: false
+        default: 'boy-1',
+        enum: {
+            values: ['boy-1', 'boy-2', 'boy-3', 'girl-1', 'girl-2', 'girl-3', 'man-1', 'woman-1'],
+            message: '{VALUE} is not supported'
+        }
     },
     friends: [
         {
