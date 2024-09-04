@@ -124,7 +124,7 @@ function LoginForm() {
         uniqueId: response?.data?.uniqueId,
         friends: response?.data?.friends,
         accessToken: response?.data?.accessToken,
-        profileSetup: response?.data.profileSetup
+        pfp: response?.data?.pfp
       };
       setUser(userObj);
       

@@ -18,6 +18,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Input } from "@/components/ui/input";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
@@ -25,14 +30,25 @@ import { useState } from 'react';
 
 import { FaQuoteLeft } from "react-icons/fa";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa6";
+import { FaPlus } from "react-icons/fa6";
+import Boy1 from '../assets/profile_icons/boy-1.jpg';
+import Boy2 from '../assets/profile_icons/boy-2.jpg';
+import Boy3 from '../assets/profile_icons/boy-3.jpg';
+import Girl1 from '../assets/profile_icons/girl-1.jpg';
+import Girl2 from '../assets/profile_icons/girl-2.jpg';
+import Girl3 from '../assets/profile_icons/girl-3.jpg';
+import Man1 from '../assets/profile_icons/man-1.jpg';
+import Woman1 from '../assets/profile_icons/woman-1.jpg';
 
 const signup_url = '/users';
 
 const formSchema = z.object({
     username: z.string(),
     email: z.string().email(),
-    password: z.string()
+    password: z.string(),
 });
+
+const avatars  = ['', Boy1, Boy2, Boy3, Girl1, Girl2, Girl3, Man1, Woman1];
 
 const reviews = [
   {
@@ -95,6 +111,12 @@ export default function Signup() {
 }
 
 function SignUpForm() {
+  const [avatar, setAvatar] = useState(0);
+
+  function handleAvatar(i) {
+    setAvatar(i);
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema)
   });
@@ -105,13 +127,17 @@ function SignUpForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
+      let payload:any = values;
+      if (avatar) payload = { ...payload, pfp: avatar };
       const response = await axios.post(signup_url,
-        JSON.stringify(values),
+        JSON.stringify(payload),
         {
           headers: { 'Content-Type': 'application/json' },
           withCredentials: true
         }
       );
+
+      console.log(response);
       
       toast({
         variant: 'successful',
@@ -154,19 +180,37 @@ function SignUpForm() {
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-full p-10 rounded-lg font-quicksand text-zinc-200">
         <div className='text-2xl font-semibold py-10'>Please enter your details</div>
-        <FormField
-          control={form.control}
-          name="username"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Username</FormLabel>
-              <FormControl>
-                <Input placeholder="user" {...field} autoComplete='off' className='border-none bg-slate-200 text-zinc-950'/>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <div className='flex justify-between'>
+          <div className='flex gap-5 items-center'>
+            <Popover>
+              <PopoverTrigger>
+                {avatar 
+                  ? <img src={avatars[avatar]} className='h-16 w-16 rounded-full hover:scale-110 transition-all duration-300 cursor-pointer' />
+                  : <div className='h-16 w-16 rounded-full bg-cover bg-purple-500 p-5 hover:scale-110 transition-all duration-300 cursor-pointer'><FaPlus className='h-full w-full text-white' /></div>
+                }
+              </PopoverTrigger>
+              <PopoverContent className='bg-zinc-900 grid grid-cols-4 w-fit gap-5 border-none'>
+                {avatars.map((avatar, i) => {
+                  return (avatar && <img key={i} src={avatar} className='h-10 w-10 rounded-full cursor-pointer hover:scale-110 transition-all duration-300' onClick={() => handleAvatar(i)} />)
+                })}
+              </PopoverContent>
+            </Popover>
+            <div>Profile Avatar</div>
+          </div>
+          <FormField
+            control={form.control}
+            name="username"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Username</FormLabel>
+                <FormControl>
+                  <Input placeholder="user" {...field} autoComplete='off' className='border-none bg-slate-200 text-zinc-950'/>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
         <FormField
           control={form.control}
           name="email"

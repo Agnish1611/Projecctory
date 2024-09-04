@@ -28,12 +28,7 @@ const userSchema = new mongoose.Schema({
         type: String,
     },
     pfp: {
-        type: String,
-        default: 'boy-1',
-        enum: {
-            values: ['boy-1', 'boy-2', 'boy-3', 'girl-1', 'girl-2', 'girl-3', 'man-1', 'woman-1'],
-            message: '{VALUE} is not supported'
-        }
+        type: Number,
     },
     friends: [
         {

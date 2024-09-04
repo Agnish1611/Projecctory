@@ -18,6 +18,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { HamburgerMenuIcon } from "@radix-ui/react-icons";
 
+import Boy1 from '../assets/profile_icons/boy-1.jpg';
+import Boy2 from '../assets/profile_icons/boy-2.jpg';
+import Boy3 from '../assets/profile_icons/boy-3.jpg';
+import Girl1 from '../assets/profile_icons/girl-1.jpg';
+import Girl2 from '../assets/profile_icons/girl-2.jpg';
+import Girl3 from '../assets/profile_icons/girl-3.jpg';
+import Man1 from '../assets/profile_icons/man-1.jpg';
+import Woman1 from '../assets/profile_icons/woman-1.jpg';
+
+const avatars  = ['', Boy1, Boy2, Boy3, Girl1, Girl2, Girl3, Man1, Woman1];
+
 let navItems = [
     [
         {
@@ -93,7 +104,9 @@ function Navbar() {
     return (
         <section className="sm:w-[15rem] flex sm:flex-col max-sm:items-center max-sm:justify-between flex-row bg-[#070707] text-white font-quicksand sm:h-screen w-screen h-10">
             <div className='flex gap-5 py-5 px-6 items-center'>
-                <img src={Icon} className='h-8 w-8 rounded-full max-sm:h-6 max-sm:w-6' />
+                {user.pfp 
+                    && (<img src={avatars[user.pfp]} className='h-8 w-8 rounded-full max-sm:h-6 max-sm:w-6' />)
+                }
                 <div className='w-full flex justify-between items-center'>
                     <div className='text-sm font-semibold flex gap-1 flex-col max-sm:hidden'>
                         <div>{user?.username}</div>

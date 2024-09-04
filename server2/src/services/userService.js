@@ -63,7 +63,7 @@ class UserService {
             );
 
             const refreshToken = jwt.sign({
-                'username': foundUser.username
+                'username': foundUser.Username
             }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
             return { 
@@ -95,7 +95,7 @@ class UserService {
 
     async updateUser(userId, userData) {
         try {
-            if (userData.username) {
+            if (userData.Username) {
                 const duplicateUsername = await this.userRepo.findUser({ username: userData.username });
 
                 if (duplicateUsername) {
