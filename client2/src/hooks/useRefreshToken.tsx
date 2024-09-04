@@ -20,7 +20,7 @@ const useRefreshToken = () => {
                 email: response.data.email,
                 friends: response.data.friends,
                 uniqueId: response.data.uniqueId,
-                profileSetup: response.data.profileSetup
+                pfp: response.data.pfp
             };
         });
         return response.data.accessToken;

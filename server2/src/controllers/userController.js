@@ -78,7 +78,6 @@ const refresh = async (req, res) => {
                 if (err) {
                     throw { err: 'Forbidden' }
                 }
-
                 const foundUser = await userService.refresh(decoded);
 
                 const accessToken = jwt.sign(

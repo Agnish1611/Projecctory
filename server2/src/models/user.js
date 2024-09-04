@@ -29,6 +29,7 @@ const userSchema = new mongoose.Schema({
     },
     pfp: {
         type: Number,
+        default: 0
     },
     friends: [
         {

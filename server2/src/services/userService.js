@@ -63,7 +63,7 @@ class UserService {
             );
 
             const refreshToken = jwt.sign({
-                'username': foundUser.Username
+                'username': foundUser.username
             }, process.env.REFRESH_TOKEN_SECRET, { expiresIn: '7d' });
 
             return { 
