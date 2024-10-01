@@ -41,7 +41,7 @@ const reviews = [
   {
     desc: '"Managing my tasks and working on projects with my classmates is easier than ever."',
     user: 'Yash Khurana',
-    work: 'Undergrad at IIIT Ranchi'
+    work: 'Owner of the company Devansh and Agnish work at'
   },
   {
     desc: '"Adding my co-workers to a project and assigning tasks can be done with one click."',

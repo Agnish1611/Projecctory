@@ -120,10 +120,11 @@ const logout = async (req, res) => {
             });
         }
 
-        res.clearCookie('jwt', {
+        res.cookie('jwt', '', {
             httpOnly: true,
+            secure: true,
             sameSite: 'None',
-            secure: true
+            maxAge: 1
         });
 
         return res.status(200).json({

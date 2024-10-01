@@ -26,6 +26,7 @@ import Girl2 from '../assets/profile_icons/girl-2.jpg';
 import Girl3 from '../assets/profile_icons/girl-3.jpg';
 import Man1 from '../assets/profile_icons/man-1.jpg';
 import Woman1 from '../assets/profile_icons/woman-1.jpg';
+import { axiosPrivate } from "@/api/axiosConfig";
 
 const avatars  = ['', Boy1, Boy2, Boy3, Girl1, Girl2, Girl3, Man1, Woman1];
 
@@ -92,7 +93,7 @@ const ProjectSection = () => {
 function Navbar() {
     const location = useLocation();
     const navigate = useNavigate();
-    const user = useRecoilValue(userAtom);   
+    const [user, setUser] = useRecoilState(userAtom);   
     const [projectsActive, setProjectsActive] = useState(location.pathname == '/project');
 
     useEffect(() => {
@@ -100,6 +101,25 @@ function Navbar() {
             navigate('/login');
         }
     }, []);
+
+    async function handlelogout() {
+        try {
+            const res = await axiosPrivate.post('/users/logout');
+            console.log(res.data);
+            setUser({
+                id: null,
+                username: null,
+                uniqueId: null,
+                email: null,
+                friends: null,
+                pfp: null,
+                accessToken: null,
+            });
+            navigate('/login');
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     return (
         <section className="sm:w-[15rem] flex sm:flex-col max-sm:items-center max-sm:justify-between flex-row bg-[#070707] text-white font-quicksand sm:h-screen w-screen h-10">
@@ -112,7 +132,7 @@ function Navbar() {
                         <div>{user?.username}</div>
                         <div className='text-xs font-regular text-muted-foreground'>{user?.uniqueId}</div>
                     </div>
-                    <RiLogoutCircleRLine className='h-5 w-5 max-sm:h-4 max-sm:w-4 cursor-pointer hover:scale-125 transition' />
+                    <button onClick={handlelogout}><RiLogoutCircleRLine className='h-5 w-5 max-sm:h-4 max-sm:w-4 cursor-pointer hover:scale-125 transition' /></button>
                 </div>
             </div>
             <div className="sm:hidden">

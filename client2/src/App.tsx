@@ -17,11 +17,11 @@ const App = () => {
   return (
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<AuthLayout />}>
-            <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />
-          </Route>
           <Route element={<PersistLogin />}>
+            <Route path="/" element={<AuthLayout />}>
+              <Route index path="/login" element={<Login />} />
+              <Route path="/signup" element={<Signup />} />
+            </Route>
             <Route path='/dash' element={<Layout />}>
               <Route index element={<Overview />} />
               <Route path="inbox" element={<Inbox />} />
